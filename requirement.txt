@@ -1,0 +1,174 @@
+# ============================================
+# 罕见病辅助诊断系统 - 依赖配置
+# ============================================
+
+# 核心 LangChain/LangGraph 依赖
+langchain==1.2.0
+langgraph==1.0.5
+langchain-openai==1.0.3
+langchain-core==1.2.5
+langchain-community==0.4.1
+langchain-mcp-adapters==0.2.1
+langchain-tavily==0.2.15
+langchain-anthropic==1.3.0
+langchain-classic==1.0.0
+langchain-text-splitters==1.0.0
+
+# LangGraph 扩展
+langgraph-checkpoint==3.0.1
+langgraph-prebuilt==1.0.5
+langgraph-sdk==0.3.1
+
+# 数据验证和配置
+pydantic==2.12.5
+pydantic-core==2.41.5
+pydantic-settings==2.12.0
+python-dotenv==1.2.1
+pyyaml==6.0.3
+
+# 医学工具依赖
+biopython==1.86
+baidusearch==1.0.3
+wikipedia==1.4.0
+
+# HTTP 和网络请求
+requests==2.32.5
+requests-toolbelt==1.0.0
+httpx==0.28.1
+httpcore==1.0.9
+httpx-sse==0.4.3
+aiohttp==3.13.2
+aiohappyeyeballs==2.6.1
+
+# HTML/XML 解析
+beautifulsoup4==4.14.3
+soupsieve==2.8.1
+lxml==6.0.2
+
+# 深度智能体框架 (自定义版本)
+# 从 GitHub 安装特定分支和子目录
+deepagents @ git+https://github.com/xiongsircool/deepagents.git@feat/core-focus-research#subdirectory=libs/deepagents
+
+# AI/LLM 客户端
+openai==2.8.1
+anthropic==0.75.0
+
+# MCP 协议
+mcp==1.25.0
+
+# 工具库
+shortuuid==1.0.13
+uuid-utils==0.12.0
+tenacity==9.1.2
+tiktoken==0.12.0
+tqdm==4.67.1
+
+# JSON 处理
+jsonpatch==1.33
+jsonpointer==3.0.0
+jsonschema==4.25.1
+jsonschema-rs==0.29.1
+jsonschema-specifications==2025.9.1
+dataclasses-json==0.6.7
+orjson==3.11.5
+
+# 类型相关
+typing-extensions==4.15.0
+typing-inspect==0.9.0
+typing-inspection==0.4.2
+annotated-types==0.7.0
+mypy-extensions==1.1.0
+
+# 序列化和数据处理
+marshmallow==3.26.2
+ormsgpack==1.12.1
+
+# 数据库
+sqlalchemy==2.0.45
+
+# 正则表达式和文本处理
+regex==2025.11.3
+bracex==2.6
+wcmatch==10.1
+
+# 密码学和安全
+cryptography==46.0.3
+pyjwt==2.10.1
+certifi==2025.11.12
+
+# 系统工具
+click==8.3.1
+distro==1.9.0
+packaging==25.0
+setuptools==80.9.0
+
+# 监控和追踪
+opentelemetry-api==1.39.1
+opentelemetry-sdk==1.39.1
+opentelemetry-exporter-otlp-proto-http==1.39.1
+opentelemetry-exporter-otlp-proto-common==1.39.1
+opentelemetry-proto==1.39.1
+opentelemetry-semantic-conventions==0.60b1
+structlog==25.5.0
+
+# LangSmith
+langsmith==0.5.0
+
+# 科学计算
+numpy==2.4.0
+
+# 其他依赖
+cloudpickle==3.1.2
+docstring-parser==0.17.0
+forbiddenfruit==0.1.4
+googleapis-common-protos==1.72.0
+importlib-metadata==8.7.1
+jiter==0.12.0
+referencing==0.37.0
+rpds-py==0.30.0
+zipp==3.23.0
+zstandard==0.25.0
+xxhash==3.6.0
+
+# 异步和并发
+anyio==4.12.0
+sniffio==1.3.1
+aiosignal==1.4.0
+frozenlist==1.8.0
+multidict==6.7.0
+propcache==0.4.1
+yarl==1.22.0
+attrs==25.4.0
+
+# 网络协议
+h11==0.16.0
+idna==3.11
+urllib3==2.6.2
+charset-normalizer==3.4.4
+
+# gRPC
+grpcio==1.76.0
+grpcio-tools==1.75.1
+protobuf==6.33.2
+
+# C 扩展支持
+cffi==2.0.0
+pycparser==2.23
+
+# Web 框架（LangGraph Studio 依赖）
+starlette==0.50.0
+sse-starlette==2.1.3
+python-multipart==0.0.21
+
+# 开发工具（可选，取消注释以使用）
+# pytest==8.0.0
+# pytest-asyncio==0.24.0
+# black==24.0.0
+# ruff==0.5.0
+# langgraph-cli==0.4.11
+# uvicorn==0.40.0
+# watchfiles==1.1.1
+# truststore==0.10.4
+# blockbuster==1.5.26
+# langgraph-api==0.6.12
+# langgraph-runtime-inmem==0.20.1

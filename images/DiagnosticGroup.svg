@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1178pt" height="290pt" viewBox="0.00 0.00 1178.00 290.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 286.2)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-286.2 1173.8,-286.2 1173.8,4 -4,4"/>
+<g id="clust1" class="cluster">
+<title>cluster_Group_A</title>
+<polygon fill="#f8f9fa" stroke="#e9edf0" points="9.8,-83.48 9.8,-274.2 250.8,-274.2 250.8,-83.48 9.8,-83.48"/>
+<text xml:space="preserve" text-anchor="middle" x="130.3" y="-257.6" font-family="Helvetica,Arial,sans-serif" font-size="14.00" fill="#2c3e50">Diagnostic Unit A (e.g., Genomics)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_Group_B</title>
+<polygon fill="#f8f9fa" stroke="#e9edf0" points="885.8,-83.48 885.8,-274.2 1161.8,-274.2 1161.8,-83.48 885.8,-83.48"/>
+<text xml:space="preserve" text-anchor="middle" x="1023.8" y="-257.6" font-family="Helvetica,Arial,sans-serif" font-size="14.00" fill="#2c3e50">Diagnostic Unit B (e.g., Clinical Phenotyping)</text>
+</g>
+<!-- MA_A -->
+<g id="node1" class="node">
+<title>MA_A</title>
+<path fill="#d6eaf8" stroke="#2e86c1" d="M135.6,-241.4C135.6,-241.4 30,-241.4 30,-241.4 24,-241.4 18,-235.4 18,-229.4 18,-229.4 18,-217.4 18,-217.4 18,-211.4 24,-205.4 30,-205.4 30,-205.4 135.6,-205.4 135.6,-205.4 141.6,-205.4 147.6,-211.4 147.6,-217.4 147.6,-217.4 147.6,-229.4 147.6,-229.4 147.6,-235.4 141.6,-241.4 135.6,-241.4"/>
+<text xml:space="preserve" text-anchor="middle" x="82.8" y="-226.7" font-family="Helvetica,Arial,sans-serif" font-size="11.00">Lead Agent A</text>
+<text xml:space="preserve" text-anchor="middle" x="82.8" y="-213.5" font-family="Helvetica,Arial,sans-serif" font-size="11.00">(Decision/Refining)</text>
+</g>
+<!-- MA_A&#45;&gt;MA_A -->
+<g id="edge7" class="edge">
+<title>MA_A-&gt;MA_A</title>
+<path fill="none" stroke="#2e86c1" stroke-dasharray="5,2" d="M82.8,-241.64C82.8,-247.73 82.8,-253 82.8,-253 82.8,-253 0,-253 0,-253 0,-253 0,-165 0,-165 0,-165 30.11,-165 30.11,-165 30.11,-165 30.11,-195.7 30.11,-195.7"/>
+<polygon fill="#2e86c1" stroke="#2e86c1" points="30.11,-203.7 26.51,-195.7 30.11,-200.92 30.11,-195.7 30.11,-195.7 30.11,-195.7 30.11,-200.92 33.71,-195.7 30.11,-203.7"/>
+</g>
+<!-- Sub_A -->
+<g id="node2" class="node">
+<title>Sub_A</title>
+<ellipse fill="#ebf5fb" stroke="#3498db" cx="113.8" cy="-115.8" rx="71.58" ry="24.32"/>
+<text xml:space="preserve" text-anchor="middle" x="113.8" y="-119.1" font-family="Helvetica,Arial,sans-serif" font-size="11.00">Research Sub-units</text>
+<text xml:space="preserve" text-anchor="middle" x="113.8" y="-105.9" font-family="Helvetica,Arial,sans-serif" font-size="11.00">(PubMed, HPO)</text>
+</g>
+<!-- MA_A&#45;&gt;Sub_A -->
+<g id="edge1" class="edge">
+<title>MA_A-&gt;Sub_A</title>
+<path fill="none" stroke="#444444" d="M112.47,-205.15C112.47,-205.15 112.47,-149.83 112.47,-149.83"/>
+<polygon fill="#444444" stroke="#444444" points="112.47,-141.83 116.07,-149.83 112.47,-144.61 112.47,-149.83 112.47,-149.83 112.47,-149.83 112.47,-144.61 108.87,-149.83 112.47,-141.83"/>
+<text xml:space="preserve" text-anchor="middle" x="86.3" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">Tasking</text>
+</g>
+<!-- Bulletin_Board -->
+<g id="node5" class="node">
+<title>Bulletin_Board</title>
+<polygon fill="#fdf2f8" stroke="#d81b60" points="618.8,-144.6 262.8,-144.6 258.8,-140.6 258.8,-87 614.8,-87 618.8,-91 618.8,-144.6"/>
+<polyline fill="none" stroke="#d81b60" points="614.8,-140.6 258.8,-140.6"/>
+<polyline fill="none" stroke="#d81b60" points="614.8,-140.6 614.8,-87"/>
+<polyline fill="none" stroke="#d81b60" points="614.8,-140.6 618.8,-144.6"/>
+<text xml:space="preserve" text-anchor="middle" x="438.8" y="-119.1" font-family="Helvetica,Arial,sans-serif" font-size="11.00">Shared Multi-Disciplinary Discussion Space</text>
+<text xml:space="preserve" text-anchor="middle" x="438.8" y="-105.9" font-family="Helvetica,Arial,sans-serif" font-size="11.00">(Cross-Group Peer Review)</text>
+</g>
+<!-- MA_A&#45;&gt;Bulletin_Board -->
+<g id="edge5" class="edge">
+<title>MA_A-&gt;Bulletin_Board</title>
+<path fill="none" stroke="#444444" d="M157.27,-214C157.27,-214 378.8,-214 378.8,-214 378.8,-214 378.8,-154.22 378.8,-154.22"/>
+<polygon fill="#444444" stroke="#444444" points="157.27,-211.2 149.27,-214 157.27,-216.8 157.27,-211.2"/>
+<polygon fill="#444444" stroke="#444444" points="378.8,-146.22 382.4,-154.22 378.8,-149 378.8,-154.22 378.8,-154.22 378.8,-154.22 378.8,-149 375.2,-154.22 378.8,-146.22"/>
+<text xml:space="preserve" text-anchor="middle" x="260.29" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">Upload / Review</text>
+</g>
+<!-- Summary_Agent -->
+<g id="node6" class="node">
+<title>Summary_Agent</title>
+<polygon fill="#fdebd0" stroke="#d35400" points="877.8,-133.8 661.8,-133.8 661.8,-97.8 877.8,-97.8 877.8,-133.8"/>
+<text xml:space="preserve" text-anchor="middle" x="769.8" y="-119.1" font-family="Helvetica,Arial,sans-serif" font-size="11.00">Synthesis &amp; Summary Agent</text>
+<text xml:space="preserve" text-anchor="middle" x="769.8" y="-105.9" font-family="Helvetica,Arial,sans-serif" font-size="11.00">(Final Consensus Gatekeeper)</text>
+</g>
+<!-- MA_A&#45;&gt;Summary_Agent -->
+<g id="edge9" class="edge">
+<title>MA_A-&gt;Summary_Agent</title>
+<path fill="none" stroke="#444444" d="M148.05,-232C319.54,-232 769.8,-232 769.8,-232 769.8,-232 769.8,-143.43 769.8,-143.43"/>
+<polygon fill="#444444" stroke="#444444" points="769.8,-135.43 773.4,-143.43 769.8,-138.21 769.8,-143.43 769.8,-143.43 769.8,-143.43 769.8,-138.21 766.2,-143.43 769.8,-135.43"/>
+<text xml:space="preserve" text-anchor="middle" x="369.67" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">[Satisfied Status]</text>
+</g>
+<!-- Sub_A&#45;&gt;MA_A -->
+<g id="edge2" class="edge">
+<title>Sub_A-&gt;MA_A</title>
+<path fill="none" stroke="#444444" d="M77.34,-137.06C77.34,-137.06 77.34,-195.83 77.34,-195.83"/>
+<polygon fill="#444444" stroke="#444444" points="77.34,-203.83 73.74,-195.83 77.34,-201.05 77.34,-195.83 77.34,-195.83 77.34,-195.83 77.34,-201.05 80.94,-195.83 77.34,-203.83"/>
+<text xml:space="preserve" text-anchor="middle" x="165.54" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">Evidence</text>
+</g>
+<!-- MA_B -->
+<g id="node3" class="node">
+<title>MA_B</title>
+<path fill="#d5f5e3" stroke="#239b56" d="M1011.6,-241.4C1011.6,-241.4 906,-241.4 906,-241.4 900,-241.4 894,-235.4 894,-229.4 894,-229.4 894,-217.4 894,-217.4 894,-211.4 900,-205.4 906,-205.4 906,-205.4 1011.6,-205.4 1011.6,-205.4 1017.6,-205.4 1023.6,-211.4 1023.6,-217.4 1023.6,-217.4 1023.6,-229.4 1023.6,-229.4 1023.6,-235.4 1017.6,-241.4 1011.6,-241.4"/>
+<text xml:space="preserve" text-anchor="middle" x="958.8" y="-226.7" font-family="Helvetica,Arial,sans-serif" font-size="11.00">Lead Agent B</text>
+<text xml:space="preserve" text-anchor="middle" x="958.8" y="-213.5" font-family="Helvetica,Arial,sans-serif" font-size="11.00">(Decision/Refining)</text>
+</g>
+<!-- MA_B&#45;&gt;MA_B -->
+<g id="edge8" class="edge">
+<title>MA_B-&gt;MA_B</title>
+<path fill="none" stroke="#239b56" stroke-dasharray="5,2" d="M958.8,-241.77C958.8,-252.91 958.8,-265 958.8,-265 958.8,-265 885.9,-265 885.9,-265 885.9,-265 885.9,-185 885.9,-185 885.9,-185 918.81,-185 918.81,-185 918.81,-185 918.81,-195.88 918.81,-195.88"/>
+<polygon fill="#239b56" stroke="#239b56" points="918.81,-203.88 915.21,-195.88 918.81,-201.1 918.81,-195.88 918.81,-195.88 918.81,-195.88 918.81,-201.1 922.41,-195.88 918.81,-203.88"/>
+</g>
+<!-- Sub_B -->
+<g id="node4" class="node">
+<title>Sub_B</title>
+<ellipse fill="#eafaf1" stroke="#2ecc71" cx="1002.8" cy="-115.8" rx="71.58" ry="24.32"/>
+<text xml:space="preserve" text-anchor="middle" x="1002.8" y="-119.1" font-family="Helvetica,Arial,sans-serif" font-size="11.00">Research Sub-units</text>
+<text xml:space="preserve" text-anchor="middle" x="1002.8" y="-105.9" font-family="Helvetica,Arial,sans-serif" font-size="11.00">(Web, Lab Tools)</text>
+</g>
+<!-- MA_B&#45;&gt;Sub_B -->
+<g id="edge3" class="edge">
+<title>MA_B-&gt;Sub_B</title>
+<path fill="none" stroke="#444444" d="M992.81,-205.15C992.81,-205.15 992.81,-149.43 992.81,-149.43"/>
+<polygon fill="#444444" stroke="#444444" points="992.81,-141.43 996.41,-149.43 992.81,-144.21 992.81,-149.43 992.81,-149.43 992.81,-149.43 992.81,-144.21 989.21,-149.43 992.81,-141.43"/>
+<text xml:space="preserve" text-anchor="middle" x="962.3" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">Tasking</text>
+</g>
+<!-- MA_B&#45;&gt;Bulletin_Board -->
+<g id="edge6" class="edge">
+<title>MA_B-&gt;Bulletin_Board</title>
+<path fill="none" stroke="#444444" d="M884.36,-223C884.36,-223 498.8,-223 498.8,-223 498.8,-223 498.8,-154.31 498.8,-154.31"/>
+<polygon fill="#444444" stroke="#444444" points="884.36,-225.8 892.36,-223 884.36,-220.2 884.36,-225.8"/>
+<polygon fill="#444444" stroke="#444444" points="498.8,-146.31 502.4,-154.31 498.8,-149.09 498.8,-154.31 498.8,-154.31 498.8,-154.31 498.8,-149.09 495.2,-154.31 498.8,-146.31"/>
+<text xml:space="preserve" text-anchor="middle" x="479.29" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">Upload / Review</text>
+</g>
+<!-- MA_B&#45;&gt;Summary_Agent -->
+<g id="edge10" class="edge">
+<title>MA_B-&gt;Summary_Agent</title>
+<path fill="none" stroke="#444444" d="M906.41,-205.18C906.41,-174.54 906.41,-116 906.41,-116 906.41,-116 887.32,-116 887.32,-116"/>
+<polygon fill="#444444" stroke="#444444" points="879.32,-116 887.32,-112.4 882.1,-116 887.32,-116 887.32,-116 887.32,-116 882.1,-116 887.32,-119.6 879.32,-116"/>
+<text xml:space="preserve" text-anchor="middle" x="834.67" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">[Satisfied Status]</text>
+</g>
+<!-- Sub_B&#45;&gt;MA_B -->
+<g id="edge4" class="edge">
+<title>Sub_B-&gt;MA_B</title>
+<path fill="none" stroke="#444444" d="M962.01,-136.04C962.01,-136.04 962.01,-195.83 962.01,-195.83"/>
+<polygon fill="#444444" stroke="#444444" points="962.01,-203.83 958.41,-195.83 962.01,-201.05 962.01,-195.83 962.01,-195.83 962.01,-195.83 962.01,-201.05 965.61,-195.83 962.01,-203.83"/>
+<text xml:space="preserve" text-anchor="middle" x="1041.54" y="-172.3" font-family="Helvetica,Arial,sans-serif" font-size="9.00">Evidence</text>
+</g>
+<!-- Final_Report -->
+<g id="node7" class="node">
+<title>Final_Report</title>
+<polygon fill="#2c3e50" stroke="black" points="861.47,-36 672.13,-36 672.13,0 867.47,0 867.47,-30 861.47,-36"/>
+<polyline fill="none" stroke="black" points="861.47,-36 861.47,-30"/>
+<polyline fill="none" stroke="black" points="867.47,-30 861.47,-30"/>
+<text xml:space="preserve" text-anchor="middle" x="769.8" y="-14.7" font-family="Helvetica,Arial,sans-serif" font-size="11.00" fill="white">Comprehensive MDT Diagnostic Report</text>
+</g>
+<!-- Summary_Agent&#45;&gt;Final_Report -->
+<g id="edge11" class="edge">
+<title>Summary_Agent-&gt;Final_Report</title>
+<path fill="none" stroke="#444444" d="M769.8,-97.4C769.8,-97.4 769.8,-45.53 769.8,-45.53"/>
+<polygon fill="#444444" stroke="#444444" points="769.8,-37.53 773.4,-45.53 769.8,-40.31 769.8,-45.53 769.8,-45.53 769.8,-45.53 769.8,-40.31 766.2,-45.53 769.8,-37.53"/>
+</g>
+</g>
+</svg>

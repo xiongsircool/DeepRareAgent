@@ -1,0 +1,151 @@
+# ============================================================
+# Configuration for PreDiagnosis Agent (P01)
+# ============================================================
+pre_diagnosis_agent:
+  provider: "anthropic"  # "openai" | "anthropic"
+  model_name: "mimo-v2-flash"
+  base_url: "https://api.xiaomimimo.com/anthropic"
+  api_key: "YOUR_API_KEY_HERE"  # 替换为你的API密钥
+  temperature: 0.2
+  model_kwargs:
+    max_tokens: 8000
+  system_prompt_path: "DeepRareAgent/prompts/prediagnosisprompt.txt"
+
+# ============================================================
+# Configuration for Deep Medical Research Agent (P02)
+# ============================================================
+deep_medical_research_agent:
+  max_input_tokens: 80000
+  # 主控智能体：负责整体规划与逻辑整合
+  main_agent:
+    provider: "openai"  # "openai" | "anthropic"
+    model_name: "Pro/deepseek-ai/DeepSeek-V3.2"
+    base_url: "https://api.siliconflow.cn/v1"
+    api_key: "YOUR_SILICONFLOW_API_KEY_HERE"  # 替换为你的API密钥
+    temperature: 0.2
+    model_kwargs:
+      max_tokens: 8000
+    system_prompt_path: "DeepRareAgent/prompts/02deepagent_main_prompt.txt"
+
+  # 子任务智能体：负责外部工具调用与细节检索
+  sub_agent:
+    provider: "openai"  # "openai" | "anthropic"
+    model_name: "Pro/deepseek-ai/DeepSeek-V3.2"
+    base_url: "https://api.siliconflow.cn/v1"
+    api_key: "YOUR_SILICONFLOW_API_KEY_HERE"  # 替换为你的API密钥
+    temperature: 0.2
+    model_kwargs:
+      max_tokens: 8000
+    system_prompt_path: "DeepRareAgent/prompts/02deepagent_sub_prompt.txt"
+
+
+# ============================================================
+# Configuration for Multi-Expert Diagnosis Agent (P02)
+# ============================================================
+
+multi_expert_diagnosis_agent:
+  group_1:
+    max_input_tokens: 80000
+    main_agent:
+      name: "Clinical_Lead_G1"
+      provider: "openai"
+      model_name: "GLM-4.7"
+      base_url: "https://aiping.cn/api/v1"
+      api_key: "YOUR_AIPING_API_KEY_HERE"  # 替换为你的API密钥
+      temperature: 0.2
+      model_kwargs:
+        # max_tokens: 8000
+      system_prompt_path: "DeepRareAgent/prompts/02deepagent_main_prompt.txt"
+      excoulde_tools:  []
+      additional_tools: ["extract_evidences"]
+    sub_agent:
+      sub_agent_1:
+        name: "Phenotype_Analyst"
+        description: "专注于将患者症状转化为标准化的HPO术语，并基于HPO编码检索相关的罕见病列表。"
+        provider: "openai"
+        model_name: "GLM-4.7"
+        base_url: "https://aiping.cn/api/v1"
+        api_key: "YOUR_AIPING_API_KEY_HERE"  # 替换为你的API密钥
+        temperature: 0.2
+        model_kwargs:
+          # max_tokens: 8000
+        system_prompt_path: "DeepRareAgent/prompts/02deepagent_sub_prompt.txt"
+        excoulde_tools: []
+        additional_tools: ["save_evidences","extract_evidences","phenotype_to_hpo_tool","hpo_to_diseases_tool"]
+      sub_agent_2:
+        name: "Literature_Researcher"
+        description: "专注于利用PubMed、LitSense和通用搜索引擎检索医学文献与疾病知识，为诊断提供证据支持。"
+        provider: "openai"
+        model_name: "GLM-4.7"
+        base_url: "https://aiping.cn/api/v1"
+        api_key: "YOUR_AIPING_API_KEY_HERE"  # 替换为你的API密钥
+        temperature: 0.2
+        model_kwargs:
+          # max_tokens: 8000
+        system_prompt_path: "DeepRareAgent/prompts/02deepagent_sub_prompt.txt"
+        excoulde_tools: []
+        additional_tools: ["save_evidences","extract_evidences","search_wikipedia_tool","search_pubmed","lit_sense_search_tool"]
+
+  # Expert Group 2
+  group_2:
+    max_input_tokens: 80000
+    main_agent:
+      name: "Clinical_Lead_G2"
+      provider: "openai"
+      model_name: "MiniMax-M2.1"
+      base_url: "https://aiping.cn/api/v1"
+      api_key: "YOUR_AIPING_API_KEY_HERE"  # 替换为你的API密钥
+      temperature: 0.2
+      model_kwargs:
+        # max_tokens: 8000
+      system_prompt_path: "DeepRareAgent/prompts/02deepagent_main_prompt.txt"
+      excoulde_tools: []
+      additional_tools: ["extract_evidences"]
+    sub_agent:
+      sub_agent_1:
+        name: "Phenotype_Analyst"
+        description: "专注于将患者症状转化为标准化的HPO术语,并基于HPO编码检索相关的罕见病列表。"
+        provider: "openai"
+        model_name: "MiniMax-M2.1"
+        base_url: "https://aiping.cn/api/v1"
+        api_key: "YOUR_AIPING_API_KEY_HERE"  # 替换为你的API密钥
+        temperature: 0.2
+        model_kwargs:
+          # max_tokens: 8000
+        system_prompt_path: "DeepRareAgent/prompts/02deepagent_sub_prompt.txt"
+        excoulde_tools: []
+        additional_tools: ["save_evidences","extract_evidences","phenotype_to_hpo_tool","hpo_to_diseases_tool"]
+      sub_agent_2:
+        name: "Literature_Researcher"
+        description: "专注于利用PubMed、LitSense和通用搜索引擎检索医学文献与疾病知识,为诊断提供证据支持。"
+        provider: "openai"
+        model_name: "MiniMax-M2.1"
+        base_url: "https://aiping.cn/api/v1"
+        api_key: "YOUR_AIPING_API_KEY_HERE"  # 替换为你的API密钥
+        temperature: 0.2
+        model_kwargs:
+          # max_tokens: 8000
+        system_prompt_path: "DeepRareAgent/prompts/02deepagent_sub_prompt.txt"
+        excoulde_tools: []
+        additional_tools: ["save_evidences","extract_evidences","search_wikipedia_tool","search_pubmed","lit_sense_search_tool"]
+
+
+# ============================================================
+# Configuration for MDT System
+# ============================================================
+mdt_config:
+  max_rounds: 5  # MDT 多专家会诊的最大轮数
+
+
+# ============================================================
+# Configuration for Summary Agent (P03)
+# ============================================================
+summary_agent:
+  provider: "openai"  # "openai" | "anthropic"
+  model_name: "Pro/deepseek-ai/DeepSeek-V3.2"
+  base_url: "https://api.siliconflow.cn/v1"
+  api_key: "YOUR_SILICONFLOW_API_KEY_HERE"  # 替换为你的API密钥
+  temperature: 0.1  # 较低的温度，确保汇总的一致性和准确性
+  model_kwargs:
+    max_tokens: 8000  # 较大的输出长度，用于生成完整的综合报告
+  system_prompt_path: "DeepRareAgent/prompts/03summary_prompt.txt"

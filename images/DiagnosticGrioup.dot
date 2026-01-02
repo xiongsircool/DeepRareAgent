@@ -1,0 +1,62 @@
+digraph G {
+    // Nature 风格基础设定
+    graph [rankdir=TB, nodesep=0.6, ranksep=0.7, fontname="Helvetica,Arial,sans-serif", compound=true, splines=ortho];
+    node [fontname="Helvetica,Arial,sans-serif", fontsize=11, shape=rect, style="filled,rounded", fixedsize=false, width=1.8];
+    edge [fontname="Helvetica,Arial,sans-serif", fontsize=9, color="#444444", arrowhead=vee, arrowsize=0.8];
+
+    // ==========================================
+    // 专家组组层 (Parallel Research Layer)
+    // ==========================================
+    
+    subgraph cluster_Group_A {
+        label = "Diagnostic Unit A (e.g., Genomics)";
+        style = "filled"; color = "#E9EDF0"; fillcolor = "#F8F9FA"; fontcolor = "#2C3E50";
+        
+        MA_A [label="Lead Agent A\n(Decision/Refining)", fillcolor="#D6EAF8", color="#2E86C1"];
+        Sub_A [label="Research Sub-units\n(PubMed, HPO)", shape=ellipse, fillcolor="#EBF5FB", color="#3498DB"];
+        
+        MA_A -> Sub_A [label="Tasking"];
+        Sub_A -> MA_A [label="Evidence"];
+    }
+
+    subgraph cluster_Group_B {
+        label = "Diagnostic Unit B (e.g., Clinical Phenotyping)";
+        style = "filled"; color = "#E9EDF0"; fillcolor = "#F8F9FA"; fontcolor = "#2C3E50";
+        
+        MA_B [label="Lead Agent B\n(Decision/Refining)", fillcolor="#D5F5E3", color="#239B56"];
+        Sub_B [label="Research Sub-units\n(Web, Lab Tools)", shape=ellipse, fillcolor="#EAFAF1", color="#2ECC71"];
+        
+        MA_B -> Sub_B [label="Tasking"];
+        Sub_B -> MA_B [label="Evidence"];
+    }
+
+    // ==========================================
+    // 核心讨论区 (Decentralized Bulletin Board)
+    // ==========================================
+    
+    Bulletin_Board [label="Shared Multi-Disciplinary Discussion Space\n(Cross-Group Peer Review)", 
+                    shape=box3d, fillcolor="#FDF2F8", color="#D81B60", style="filled", width=5, height=0.8];
+
+    // 组间互动逻辑
+    MA_A -> Bulletin_Board [dir=both, label="Upload / Review"];
+    MA_B -> Bulletin_Board [dir=both, label="Upload / Review"];
+
+    // 自发重规划路径 (Self-Loop triggered by board information)
+    MA_A -> MA_A [label="Self-Correction Loop", color="#2E86C1", style=dashed];
+    MA_B -> MA_B [label="Self-Correction Loop", color="#239B56", style=dashed];
+
+    // ==========================================
+    // 汇总层 (Final Synthesis Layer)
+    // ==========================================
+    
+    Summary_Agent [label="Synthesis & Summary Agent\n(Final Consensus Gatekeeper)", 
+                  fillcolor="#FDEBD0", color="#D35400", style="filled", width=3];
+
+    MA_A -> Summary_Agent [label="[Satisfied Status]"];
+    MA_B -> Summary_Agent [label="[Satisfied Status]"];
+
+    Final_Report [label="Comprehensive MDT Diagnostic Report", 
+                 shape=note, fillcolor="#2C3E50", fontcolor=white, style="filled"];
+
+    Summary_Agent -> Final_Report;
+}

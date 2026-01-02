@@ -1,0 +1,11 @@
+{
+  "$schema": "https://langgra.ph/schema.json",
+  "dependencies": [
+    "."
+  ],
+  "graphs": {
+    "agent": "DeepRareAgent.graph:graph"
+  },
+  "env": "./.env",
+  "python_version": "3.12"
+}

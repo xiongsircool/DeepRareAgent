@@ -1,0 +1,224 @@
+# ==========================================
+# Python Core
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Package managers
+.python-version
+Pipfile.lock
+poetry.lock
+.pdm.toml
+.pdm-python
+.pdm-build/
+__pypackages__/
+
+# Type checkers & linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Cython
+cython_debug/
+
+# ==========================================
+# IDEs & Editors
+# ==========================================
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+
+# Vim
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ==========================================
+# DeepRareAgent Project Specific
+# ==========================================
+
+# LangGraph Runtime & Checkpoints
+.langgraph_api/
+*.pckl
+*.pickle
+checkpoints/
+langgraph_checkpoints/
+.langgraph/
+
+# LangSmith Tracing
+.langsmith/
+langsmith_traces/
+
+# Configuration files
+# IMPORTANT: config.yml contains API keys and is NOT tracked
+# Use config.example.yml as template and create your own config.yml locally
+config.yml
+config.local.yml
+config.production.yml
+config.test.yml
+
+# Credentials (extra safety)
+credentials.json
+secrets.json
+*.key
+*.pem
+api_keys.txt
+.secrets/
+
+# Patient Data & PII (IMPORTANT)
+patient_data/
+test_data/private/
+*.patient.json
+real_cases/
+
+# Literature & Knowledge Cache
+literature_cache/
+pubmed_cache/
+litsense_cache/
+knowledge_base_cache/
+
+# Logs & Debug Output
+*.log
+logs/
+debug_output/
+trace_*.json
+run_*.log
+
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+checkpoint.db
+
+# Temporary & Backup Files
+scratch/
+temp/
+tmp/
+test_*.py.bak
+*_backup.py
+*.backup
+*_old.*
+
+# Generated Images (keep final versions, ignore temp)
+images/*_temp.png
+images/*_draft.*
+images/.tmp/
+
+# Large image files (>100MB, exceeds GitHub limit)
+images/深度诊断单个诊断组的工作示例图.webp
+
+# Test Outputs
+test_output/
+test_results/
+coverage_html/
+
+# Claude Code specific
+.claude
+
+# Spec-workflow (if not actively using)
+.spec-workflow/
+.spec-workflows/
+
+# uv lock file
+# Keeping uv.lock tracked for reproducibility
+# Uncomment below to ignore:
+# uv.lock
+
+# ==========================================
+# OS Specific
+# ==========================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# ==========================================
+# Optional: Uncomment if needed
+# ==========================================
+
+# Ignore all markdown except README
+# *.md
+# !README.md
+# !CLAUDE.md
+
+# Large model files (if you download models locally)
+# models/*.bin
+# models/*.safetensors
+# *.gguf
+
+# Notebook outputs (keep notebooks but clean outputs)
+# *.ipynb
+# !notebooks/*.ipynb

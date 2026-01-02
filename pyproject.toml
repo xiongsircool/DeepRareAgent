@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "langgraph-template"
+version = "0.1.0"
+description = "A template for LangGraph projects with generative UI support"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [
+    {name = "LangChain", email = "hello@langchain.com"},
+]
+keywords = ["langgraph", "llm", "agent", "generative-ui"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "langchain>=1.2.0",
+    "langgraph>=1.0.5",
+    "langchain-openai>=1.0.3",
+    "langchain-core>=1.2.5",
+    "langchain-anthropic>=1.3.0",
+    "pydantic>=2.12.5",
+    "python-dotenv>=1.2.1",
+    # 自定义 deepagents 从 GitHub 安装
+    "deepagents @ git+https://github.com/xiongsircool/deepagents.git@feat/core-focus-research#subdirectory=libs/deepagents",
+    "langsmith>=0.5.0",
+    "json5>=0.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "langgraph-cli[inmem]>=0.4.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "black>=24.0.0",
+    "ruff>=0.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/langchain-ai/langgraph"
+Repository = "https://github.com/langchain-ai/langgraph"
+Documentation = "https://langchain-ai.github.io/langgraph/"
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["DeepRareAgent*"]

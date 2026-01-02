@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1436pt" height="642pt" viewBox="0.00 0.00 1436.00 642.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 638.03)">
+<title>Dual_Mode_Architecture</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-638.03 1432,-638.03 1432,4 -4,4"/>
+<g id="clust1" class="cluster">
+<title>cluster_Blackboard</title>
+<polygon fill="#eeeeee" stroke="black" points="8,-496.83 8,-579.23 312,-579.23 312,-496.83 8,-496.83"/>
+<text xml:space="preserve" text-anchor="middle" x="160" y="-562.63" font-family="Times,serif" font-size="14.00">Global Shared Space (The Blackboard)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_Expert_Group</title>
+<path fill="#fbfbfb" stroke="#333333" stroke-width="2" d="M332,-8C332,-8 782,-8 782,-8 788,-8 794,-14 794,-20 794,-20 794,-614.03 794,-614.03 794,-620.03 788,-626.03 782,-626.03 782,-626.03 332,-626.03 332,-626.03 326,-626.03 320,-620.03 320,-614.03 320,-614.03 320,-20 320,-20 320,-14 326,-8 332,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="557" y="-609.43" font-family="Times,serif" font-size="14.00">Single Expert Unit (e.g., Geneticist)</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_Mode_External</title>
+<polygon fill="#e8f5e9" stroke="#e8f5e9" stroke-width="2" points="328,-206.62 328,-593.23 570,-593.23 570,-206.62 328,-206.62"/>
+<text xml:space="preserve" text-anchor="middle" x="449" y="-576.63" font-family="Times,serif" font-size="14.00">State B: External Collaboration</text>
+<text xml:space="preserve" text-anchor="middle" x="449" y="-559.83" font-family="Times,serif" font-size="14.00">(Role: Diplomat &amp; Gatekeeper)</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_Mode_Internal</title>
+<polygon fill="#e3f2fd" stroke="#e3f2fd" stroke-width="2" points="578,-16 578,-311.63 786,-311.63 786,-16 578,-16"/>
+<text xml:space="preserve" text-anchor="middle" x="682" y="-295.03" font-family="Times,serif" font-size="14.00">State A: Internal Investigation</text>
+<text xml:space="preserve" text-anchor="middle" x="682" y="-278.23" font-family="Times,serif" font-size="14.00">(Role: Commander &amp; Researcher)</text>
+</g>
+<g id="clust5" class="cluster">
+<title>cluster_Legend</title>
+<polygon fill="none" stroke="black" stroke-dasharray="5,2" points="802,-499.63 802,-571.63 1420,-571.63 1420,-499.63 802,-499.63"/>
+<text xml:space="preserve" text-anchor="middle" x="1111" y="-558.63" font-family="Times,serif" font-size="10.00">Legend</text>
+</g>
+<!-- Shared_State -->
+<g id="node1" class="node">
+<title>Shared_State</title>
+<polygon fill="#fff9c4" stroke="black" points="298,-546.43 16,-546.43 16,-504.83 304,-504.83 304,-540.43 298,-546.43"/>
+<polyline fill="none" stroke="black" points="298,-546.43 298,-540.43"/>
+<polyline fill="none" stroke="black" points="304,-540.43 298,-540.43"/>
+<text xml:space="preserve" text-anchor="middle" x="160" y="-529.83" font-family="Arial" font-size="14.00">Shared Evidence &amp; Conflicts</text>
+<text xml:space="preserve" text-anchor="middle" x="160" y="-513.03" font-family="Arial" font-size="14.00">(JSON State)</text>
+</g>
+<!-- Lead_External -->
+<g id="node2" class="node">
+<title>Lead_External</title>
+<polygon fill="#a5d6a7" stroke="black" stroke-width="2" points="449,-444.83 335.74,-403.23 449,-361.63 562.26,-403.23 449,-444.83"/>
+<text xml:space="preserve" text-anchor="middle" x="449" y="-407.43" font-family="Arial" font-size="14.00">Lead Agent</text>
+<text xml:space="preserve" text-anchor="middle" x="449" y="-390.63" font-family="Arial" font-size="14.00">(External State)</text>
+</g>
+<!-- Shared_State&#45;&gt;Lead_External -->
+<g id="edge8" class="edge">
+<title>Shared_State-&gt;Lead_External</title>
+<path fill="none" stroke="red" d="M304.4,-520C333.04,-520 354.49,-520 354.49,-520 354.49,-520 354.49,-422.05 354.49,-422.05"/>
+<polygon fill="red" stroke="red" points="357.99,-422.05 354.49,-412.05 350.99,-422.05 357.99,-422.05"/>
+<text xml:space="preserve" text-anchor="middle" x="247.95" y="-477.83" font-family="Arial" font-size="10.00" fill="red">Notify Conflict</text>
+<text xml:space="preserve" text-anchor="middle" x="247.95" y="-465.83" font-family="Arial" font-size="10.00" fill="red">(Event Driven)</text>
+</g>
+<!-- Lead_External&#45;&gt;Shared_State -->
+<g id="edge9" class="edge">
+<title>Lead_External-&gt;Shared_State</title>
+<path fill="none" stroke="grey" d="M373.23,-417.5C373.23,-451.03 373.23,-532 373.23,-532 373.23,-532 315.81,-532 315.81,-532"/>
+<polygon fill="grey" stroke="grey" points="315.81,-528.5 305.81,-532 315.81,-535.5 315.81,-528.5"/>
+<text xml:space="preserve" text-anchor="middle" x="372.69" y="-471.83" font-family="Arial" font-size="10.00">Publish Final State</text>
+</g>
+<!-- Status_Lock -->
+<g id="node3" class="node">
+<title>Status_Lock</title>
+<path fill="#ffccbc" stroke="black" d="M445.52,-250.62C445.52,-250.62 348.48,-250.62 348.48,-250.62 342.48,-250.62 336.48,-244.62 336.48,-238.62 336.48,-238.62 336.48,-226.62 336.48,-226.62 336.48,-220.62 342.48,-214.62 348.48,-214.62 348.48,-214.62 445.52,-214.62 445.52,-214.62 451.52,-214.62 457.52,-220.62 457.52,-226.62 457.52,-226.62 457.52,-238.62 457.52,-238.62 457.52,-244.62 451.52,-250.62 445.52,-250.62"/>
+<text xml:space="preserve" text-anchor="middle" x="397" y="-228.42" font-family="Arial" font-size="14.00" fill="#d84315">Status: LOCKED</text>
+</g>
+<!-- Lead_External&#45;&gt;Status_Lock -->
+<g id="edge6" class="edge">
+<title>Lead_External-&gt;Status_Lock</title>
+<path fill="none" stroke="black" stroke-dasharray="5,2" d="M417.17,-373.12C417.17,-373.12 417.17,-262.39 417.17,-262.39"/>
+<polygon fill="black" stroke="black" points="420.67,-262.39 417.17,-252.39 413.67,-262.39 420.67,-262.39"/>
+<text xml:space="preserve" text-anchor="middle" x="414.69" y="-334.63" font-family="Arial" font-size="10.00">No Conflict</text>
+<text xml:space="preserve" text-anchor="middle" x="414.69" y="-322.63" font-family="Arial" font-size="10.00">&amp; High Confidence</text>
+</g>
+<!-- Lead_Internal -->
+<g id="node5" class="node">
+<title>Lead_Internal</title>
+<ellipse fill="#90caf9" stroke="black" stroke-width="2" cx="670" cy="-232.62" rx="76.79" ry="29.42"/>
+<text xml:space="preserve" text-anchor="middle" x="670" y="-236.82" font-family="Arial" font-size="14.00">Lead Agent</text>
+<text xml:space="preserve" text-anchor="middle" x="670" y="-220.02" font-family="Arial" font-size="14.00">(Internal State)</text>
+</g>
+<!-- Lead_External&#45;&gt;Lead_Internal -->
+<g id="edge1" class="edge">
+<title>Lead_External-&gt;Lead_Internal</title>
+<path fill="none" stroke="blue" stroke-width="2" d="M527.35,-390.09C527.35,-354.34 527.35,-258 527.35,-258 527.35,-258 617.61,-258 617.61,-258"/>
+<polygon fill="blue" stroke="blue" stroke-width="2" points="616.09,-261.5 626.09,-258 616.09,-254.5 616.09,-261.5"/>
+<text xml:space="preserve" text-anchor="middle" x="619.68" y="-334.63" font-family="Arial" font-size="10.00">1. Trigger / Restart</text>
+<text xml:space="preserve" text-anchor="middle" x="619.68" y="-322.63" font-family="Arial" font-size="10.00">(Unlock)</text>
+</g>
+<!-- Status_Lock&#45;&gt;Lead_External -->
+<g id="edge7" class="edge">
+<title>Status_Lock-&gt;Lead_External</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M376.83,-250.87C376.83,-250.87 376.83,-376.57 376.83,-376.57"/>
+<polygon fill="black" stroke="black" points="373.33,-376.57 376.83,-386.57 380.33,-376.57 373.33,-376.57"/>
+<text xml:space="preserve" text-anchor="middle" x="517.07" y="-328.63" font-family="Arial" font-size="10.00">Blocks Execution</text>
+</g>
+<!-- Decision_Point -->
+<g id="node4" class="node">
+<title>Decision_Point</title>
+<polygon fill="lightgrey" stroke="none" points="506.02,-543.63 391.98,-543.63 391.98,-507.63 506.02,-507.63 506.02,-543.63"/>
+<text xml:space="preserve" text-anchor="middle" x="449" y="-521.43" font-family="Arial" font-size="14.00">Conflict Check?</text>
+</g>
+<!-- Lead_Internal&#45;&gt;Lead_External -->
+<g id="edge5" class="edge">
+<title>Lead_Internal-&gt;Lead_External</title>
+<path fill="none" stroke="green" stroke-width="2" d="M616.24,-254C563.98,-254 492.43,-254 492.43,-254 492.43,-254 492.43,-365.72 492.43,-365.72"/>
+<polygon fill="green" stroke="green" stroke-width="2" points="488.93,-364.21 492.43,-374.21 495.93,-364.21 488.93,-364.21"/>
+<text xml:space="preserve" text-anchor="middle" x="728.75" y="-334.63" font-family="Arial" font-size="10.00">2. Submit Findings</text>
+<text xml:space="preserve" text-anchor="middle" x="728.75" y="-322.63" font-family="Arial" font-size="10.00">(Investigation Done)</text>
+</g>
+<!-- Sub_Worker -->
+<g id="node6" class="node">
+<title>Sub_Worker</title>
+<polygon fill="#ffffff" stroke="black" points="668.08,-155.2 585.92,-155.2 585.92,-151.2 581.92,-151.2 581.92,-147.2 585.92,-147.2 585.92,-121.6 581.92,-121.6 581.92,-117.6 585.92,-117.6 585.92,-113.6 668.08,-113.6 668.08,-155.2"/>
+<polyline fill="none" stroke="black" points="585.92,-151.2 589.92,-151.2 589.92,-147.2 585.92,-147.2"/>
+<polyline fill="none" stroke="black" points="585.92,-121.6 589.92,-121.6 589.92,-117.6 585.92,-117.6"/>
+<text xml:space="preserve" text-anchor="middle" x="627" y="-138.6" font-family="Arial" font-size="14.00">Sub-Agent</text>
+<text xml:space="preserve" text-anchor="middle" x="627" y="-121.8" font-family="Arial" font-size="14.00">(Executor)</text>
+</g>
+<!-- Lead_Internal&#45;&gt;Sub_Worker -->
+<g id="edge2" class="edge">
+<title>Lead_Internal-&gt;Sub_Worker</title>
+<path fill="none" stroke="black" d="M630.64,-207.07C630.64,-207.07 630.64,-167.03 630.64,-167.03"/>
+<polygon fill="black" stroke="black" points="634.14,-167.03 630.64,-157.03 627.14,-167.03 634.14,-167.03"/>
+<text xml:space="preserve" text-anchor="middle" x="662.45" y="-176.2" font-family="Arial" font-size="10.00">Dispatch</text>
+</g>
+<!-- Sub_Critic -->
+<g id="node7" class="node">
+<title>Sub_Critic</title>
+<polygon fill="#ffffff" stroke="black" points="706.08,-65.6 623.92,-65.6 623.92,-61.6 619.92,-61.6 619.92,-57.6 623.92,-57.6 623.92,-32 619.92,-32 619.92,-28 623.92,-28 623.92,-24 706.08,-24 706.08,-65.6"/>
+<polyline fill="none" stroke="black" points="623.92,-61.6 627.92,-61.6 627.92,-57.6 623.92,-57.6"/>
+<polyline fill="none" stroke="black" points="623.92,-32 627.92,-32 627.92,-28 623.92,-28"/>
+<text xml:space="preserve" text-anchor="middle" x="665" y="-49" font-family="Arial" font-size="14.00">Sub-Agent</text>
+<text xml:space="preserve" text-anchor="middle" x="665" y="-32.2" font-family="Arial" font-size="14.00">(Critic)</text>
+</g>
+<!-- Sub_Worker&#45;&gt;Sub_Critic -->
+<g id="edge3" class="edge">
+<title>Sub_Worker-&gt;Sub_Critic</title>
+<path fill="none" stroke="black" d="M646,-113.17C646,-113.17 646,-77.4 646,-77.4"/>
+<polygon fill="black" stroke="black" points="649.5,-77.4 646,-67.4 642.5,-77.4 649.5,-77.4"/>
+<text xml:space="preserve" text-anchor="middle" x="656.83" y="-86.6" font-family="Arial" font-size="10.00">Draft</text>
+</g>
+<!-- Sub_Critic&#45;&gt;Lead_Internal -->
+<g id="edge4" class="edge">
+<title>Sub_Critic-&gt;Lead_Internal</title>
+<path fill="none" stroke="black" d="M687.08,-65.98C687.08,-65.98 687.08,-192.02 687.08,-192.02"/>
+<polygon fill="black" stroke="black" points="683.58,-192.02 687.08,-202.02 690.58,-192.02 683.58,-192.02"/>
+<text xml:space="preserve" text-anchor="middle" x="725.96" y="-131.4" font-family="Arial" font-size="10.00">Feedback</text>
+</g>
+<!-- key1 -->
+<g id="node8" class="node">
+<title>key1</title>
+<polygon fill="lightgrey" stroke="none" points="1105.88,-543.63 810.12,-543.63 810.12,-507.63 1105.88,-507.63 1105.88,-543.63"/>
+<text xml:space="preserve" text-anchor="middle" x="958" y="-521.43" font-family="Arial" font-size="14.00">Blue Box = Internal Computation (Expensive)</text>
+</g>
+<!-- key2 -->
+<g id="node9" class="node">
+<title>key2</title>
+<polygon fill="lightgrey" stroke="none" points="1411.99,-543.63 1124.01,-543.63 1124.01,-507.63 1411.99,-507.63 1411.99,-543.63"/>
+<text xml:space="preserve" text-anchor="middle" x="1268" y="-521.43" font-family="Arial" font-size="14.00">Green Box = External Coordination (Cheap)</text>
+</g>
+</g>
+</svg>

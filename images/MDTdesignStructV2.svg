@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="820pt" height="496pt" viewBox="0.00 0.00 820.00 496.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 492.44)">
+<title>Decentralized_Medical_MAS</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-492.44 816,-492.44 816,4 -4,4"/>
+<g id="clust1" class="cluster">
+<title>cluster_Blackboard</title>
+<polygon fill="#f0f4c3" stroke="black" points="221,-398.04 221,-480.44 486,-480.44 486,-398.04 221,-398.04"/>
+<text xml:space="preserve" text-anchor="middle" x="353.5" y="-463.84" font-family="Times,serif" font-size="14.00">Shared Global Workspace (The Blackboard)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_ExpertA</title>
+<path fill="none" stroke="blue" d="M20,-111.68C20,-111.68 407,-111.68 407,-111.68 413,-111.68 419,-117.68 419,-123.68 419,-123.68 419,-344.04 419,-344.04 419,-350.04 413,-356.04 407,-356.04 407,-356.04 20,-356.04 20,-356.04 14,-356.04 8,-350.04 8,-344.04 8,-344.04 8,-123.68 8,-123.68 8,-117.68 14,-111.68 20,-111.68"/>
+<text xml:space="preserve" text-anchor="middle" x="213.5" y="-339.44" font-family="Times,serif" font-size="14.00">Expert Unit A</text>
+<text xml:space="preserve" text-anchor="middle" x="213.5" y="-322.64" font-family="Times,serif" font-size="14.00">(e.g., Genetics)</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_ExpertB</title>
+<path fill="none" stroke="green" d="M439,-111.68C439,-111.68 792,-111.68 792,-111.68 798,-111.68 804,-117.68 804,-123.68 804,-123.68 804,-344.04 804,-344.04 804,-350.04 798,-356.04 792,-356.04 792,-356.04 439,-356.04 439,-356.04 433,-356.04 427,-350.04 427,-344.04 427,-344.04 427,-123.68 427,-123.68 427,-117.68 433,-111.68 439,-111.68"/>
+<text xml:space="preserve" text-anchor="middle" x="615.5" y="-339.44" font-family="Times,serif" font-size="14.00">Expert Unit B</text>
+<text xml:space="preserve" text-anchor="middle" x="615.5" y="-322.64" font-family="Times,serif" font-size="14.00">(e.g., Clinical)</text>
+</g>
+<!-- Shared_Memory -->
+<g id="node1" class="node">
+<title>Shared_Memory</title>
+<polygon fill="#fff9c4" stroke="black" points="466.27,-447.64 233.73,-447.64 233.73,-406.04 472.27,-406.04 472.27,-441.64 466.27,-447.64"/>
+<polyline fill="none" stroke="black" points="466.27,-447.64 466.27,-441.64"/>
+<polyline fill="none" stroke="black" points="472.27,-441.64 466.27,-441.64"/>
+<text xml:space="preserve" text-anchor="middle" x="353" y="-431.04" font-family="Helvetica,sans-Serif" font-size="14.00">Global Context</text>
+<text xml:space="preserve" text-anchor="middle" x="353" y="-414.24" font-family="Helvetica,sans-Serif" font-size="14.00">(Evidence, Hypothesis, Status Map)</text>
+</g>
+<!-- Lead_A -->
+<g id="node2" class="node">
+<title>Lead_A</title>
+<ellipse fill="#bbdefb" stroke="black" cx="199" cy="-277.03" rx="87.79" ry="29.42"/>
+<text xml:space="preserve" text-anchor="middle" x="199" y="-281.23" font-family="Helvetica,sans-Serif" font-size="14.00">Lead Agent A</text>
+<text xml:space="preserve" text-anchor="middle" x="199" y="-264.43" font-family="Helvetica,sans-Serif" font-size="14.00">(Planner/Monitor)</text>
+</g>
+<!-- Shared_Memory&#45;&gt;Lead_A -->
+<g id="edge11" class="edge">
+<title>Shared_Memory-&gt;Lead_A</title>
+<path fill="none" stroke="red" stroke-width="2" d="M233.38,-414.82C200.3,-409.16 170.59,-400.69 160.18,-388.04 142.95,-367.11 154.36,-337.98 169.16,-314.96"/>
+<polygon fill="red" stroke="red" stroke-width="2" points="171.16,-318.23 173.93,-308 165.39,-314.27 171.16,-318.23"/>
+<text xml:space="preserve" text-anchor="middle" x="219.09" y="-379.04" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">Conflict Detected!</text>
+<text xml:space="preserve" text-anchor="middle" x="219.09" y="-367.04" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">(Triggers Re-investigation)</text>
+</g>
+<!-- Lead_B -->
+<g id="node5" class="node">
+<title>Lead_B</title>
+<ellipse fill="#c8e6c9" stroke="black" cx="530" cy="-277.03" rx="87.79" ry="29.42"/>
+<text xml:space="preserve" text-anchor="middle" x="530" y="-281.23" font-family="Helvetica,sans-Serif" font-size="14.00">Lead Agent B</text>
+<text xml:space="preserve" text-anchor="middle" x="530" y="-264.43" font-family="Helvetica,sans-Serif" font-size="14.00">(Planner/Monitor)</text>
+</g>
+<!-- Shared_Memory&#45;&gt;Lead_B -->
+<g id="edge12" class="edge">
+<title>Shared_Memory-&gt;Lead_B</title>
+<path fill="none" stroke="red" stroke-width="2" d="M368,-405.63C381,-388.2 398.05,-365.59 400.18,-364.04 408.88,-357.73 413.49,-361.04 423,-356.04 446.37,-343.77 470.3,-326.81 489.59,-311.84"/>
+<polygon fill="red" stroke="red" stroke-width="2" points="490.32,-315.72 496,-306.78 485.98,-310.22 490.32,-315.72"/>
+<text xml:space="preserve" text-anchor="middle" x="459.09" y="-379.04" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">New Complementary Info</text>
+<text xml:space="preserve" text-anchor="middle" x="459.09" y="-367.04" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">(Triggers Re-investigation)</text>
+</g>
+<!-- Lead_A&#45;&gt;Shared_Memory -->
+<g id="edge9" class="edge">
+<title>Lead_A-&gt;Shared_Memory</title>
+<path fill="none" stroke="grey" stroke-dasharray="5,2" d="M225.59,-305.48C241.9,-322.35 263.19,-344.41 282,-364.04 292.19,-374.67 293.94,-378.14 304.84,-388.04 308.76,-391.61 312.98,-395.22 317.24,-398.72"/>
+<polygon fill="grey" stroke="grey" points="314.77,-401.23 324.76,-404.77 319.16,-395.77 314.77,-401.23"/>
+<text xml:space="preserve" text-anchor="middle" x="342.92" y="-373.04" font-family="Helvetica,sans-Serif" font-size="10.00">Update Evidence</text>
+</g>
+<!-- Lead_A&#45;&gt;Lead_A -->
+<g id="edge3" class="edge">
+<title>Lead_A-&gt;Lead_A</title>
+<path fill="none" stroke="black" d="M281.5,-287.38C295.28,-285.93 304.79,-282.48 304.79,-277.03 304.79,-273.23 300.19,-270.41 292.76,-268.55"/>
+<polygon fill="black" stroke="black" points="293.43,-265.12 282.99,-266.92 292.28,-272.02 293.43,-265.12"/>
+<text xml:space="preserve" text-anchor="middle" x="345.08" y="-280.03" font-family="Helvetica,sans-Serif" font-size="10.00">Internal Critique</text>
+<text xml:space="preserve" text-anchor="middle" x="345.08" y="-268.03" font-family="Helvetica,sans-Serif" font-size="10.00">(Is Logic Closed?)</text>
+</g>
+<!-- Sub_A -->
+<g id="node3" class="node">
+<title>Sub_A</title>
+<polygon fill="#e3f2fd" stroke="black" points="185.41,-174.44 28.59,-174.44 28.59,-132.84 185.41,-132.84 185.41,-174.44"/>
+<text xml:space="preserve" text-anchor="middle" x="107" y="-157.84" font-family="Helvetica,sans-Serif" font-size="14.00">Sub Agent A</text>
+<text xml:space="preserve" text-anchor="middle" x="107" y="-141.04" font-family="Helvetica,sans-Serif" font-size="14.00">(Executor/Researcher)</text>
+</g>
+<!-- Lead_A&#45;&gt;Sub_A -->
+<g id="edge1" class="edge">
+<title>Lead_A-&gt;Sub_A</title>
+<path fill="none" stroke="black" d="M120.92,-263.23C84.02,-255.43 45.65,-244.15 34.65,-229.61 21.6,-212.37 36.52,-194.88 56.13,-181.13"/>
+<polygon fill="black" stroke="black" points="57.97,-184.11 64.44,-175.73 54.15,-178.25 57.97,-184.11"/>
+<text xml:space="preserve" text-anchor="middle" x="66.32" y="-214.61" font-family="Helvetica,sans-Serif" font-size="10.00">Dispatch Task</text>
+</g>
+<!-- Lock_A -->
+<g id="node4" class="node">
+<title>Lock_A</title>
+<polygon fill="#ffcdd2" stroke="black" stroke-dasharray="5,2" points="411.11,-153.64 364.56,-187.61 271.44,-187.61 224.89,-153.64 271.44,-119.68 364.56,-119.68 411.11,-153.64"/>
+<text xml:space="preserve" text-anchor="middle" x="318" y="-157.84" font-family="Helvetica,sans-Serif" font-size="14.00">State: LOCKED</text>
+<text xml:space="preserve" text-anchor="middle" x="318" y="-141.04" font-family="Helvetica,sans-Serif" font-size="14.00">(Read-Only)</text>
+</g>
+<!-- Lead_A&#45;&gt;Lock_A -->
+<g id="edge4" class="edge">
+<title>Lead_A-&gt;Lock_A</title>
+<path fill="none" stroke="black" stroke-width="2" d="M199.93,-247.18C201.69,-233.37 205.81,-217.33 215.04,-205.61 222.88,-195.68 233.15,-187.54 244.17,-180.91"/>
+<polygon fill="black" stroke="black" stroke-width="2" points="244.29,-184.84 251.35,-176.94 240.91,-178.72 244.29,-184.84"/>
+<text xml:space="preserve" text-anchor="middle" x="264.52" y="-220.61" font-family="Helvetica,sans-Serif" font-size="10.00">Confidence Saturation</text>
+<text xml:space="preserve" text-anchor="middle" x="264.52" y="-208.61" font-family="Helvetica,sans-Serif" font-size="10.00">(Mark as Final)</text>
+</g>
+<!-- Sub_A&#45;&gt;Lead_A -->
+<g id="edge2" class="edge">
+<title>Sub_A-&gt;Lead_A</title>
+<path fill="none" stroke="black" d="M106.52,-174.83C107.1,-191 110.16,-213.54 121.41,-229.61 125.82,-235.92 131.4,-241.51 137.52,-246.43"/>
+<polygon fill="black" stroke="black" points="135.44,-249.25 145.59,-252.28 139.55,-243.58 135.44,-249.25"/>
+<text xml:space="preserve" text-anchor="middle" x="156.7" y="-214.61" font-family="Helvetica,sans-Serif" font-size="10.00">Report Findings</text>
+</g>
+<!-- Lock_A&#45;&gt;Lead_A -->
+<g id="edge13" class="edge">
+<title>Lock_A-&gt;Lead_A</title>
+<path fill="none" stroke="red" stroke-dasharray="1,5" d="M323.58,-199.31C322.87,-210.03 320.23,-220.89 314,-229.61 303.86,-243.8 288.63,-253.66 272.54,-260.51"/>
+<polygon fill="red" stroke="red" points="327.08,-199.39 323.67,-189.36 320.08,-199.33 327.08,-199.39"/>
+<text xml:space="preserve" text-anchor="middle" x="360.16" y="-220.61" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">Unlock &amp; Restart</text>
+<text xml:space="preserve" text-anchor="middle" x="360.16" y="-208.61" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">(Backtracking)</text>
+</g>
+<!-- Summary_Agent -->
+<g id="node8" class="node">
+<title>Summary_Agent</title>
+<polygon fill="#d1c4e9" stroke="black" points="599.07,-22.65 599.07,-49.03 546.89,-67.68 473.11,-67.68 420.93,-49.03 420.93,-22.65 473.11,-4 546.89,-4 599.07,-22.65"/>
+<polygon fill="none" stroke="black" points="603.07,-19.83 603.07,-51.85 547.59,-71.68 472.41,-71.68 416.93,-51.85 416.93,-19.83 472.41,0 547.59,0 603.07,-19.83"/>
+<text xml:space="preserve" text-anchor="middle" x="510" y="-40.04" font-family="Helvetica,sans-Serif" font-size="14.00">Summary Agent</text>
+<text xml:space="preserve" text-anchor="middle" x="510" y="-23.24" font-family="Helvetica,sans-Serif" font-size="14.00">(Final Report)</text>
+</g>
+<!-- Lock_A&#45;&gt;Summary_Agent -->
+<g id="edge15" class="edge">
+<title>Lock_A-&gt;Summary_Agent</title>
+<path fill="none" stroke="red" stroke-width="2" d="M368.45,-122.22C393.27,-107.24 423.39,-89.08 449.45,-73.36"/>
+<polygon fill="red" stroke="red" stroke-width="2" points="449.88,-77.19 456.63,-69.03 446.26,-71.2 449.88,-77.19"/>
+<text xml:space="preserve" text-anchor="middle" x="473.13" y="-92.68" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">Consensus/Aggregation</text>
+</g>
+<!-- Lead_B&#45;&gt;Shared_Memory -->
+<g id="edge10" class="edge">
+<title>Lead_B-&gt;Shared_Memory</title>
+<path fill="none" stroke="grey" stroke-dasharray="5,2" d="M536.52,-306.83C540.27,-331.35 541.01,-366 522,-388.04 515.52,-395.56 501.13,-401.71 483.35,-406.71"/>
+<polygon fill="grey" stroke="grey" points="482.79,-403.24 473.99,-409.14 484.55,-410.01 482.79,-403.24"/>
+<text xml:space="preserve" text-anchor="middle" x="572.39" y="-373.04" font-family="Helvetica,sans-Serif" font-size="10.00">Update Evidence</text>
+</g>
+<!-- Lead_B&#45;&gt;Lead_B -->
+<g id="edge7" class="edge">
+<title>Lead_B-&gt;Lead_B</title>
+<path fill="none" stroke="black" d="M612.5,-287.38C626.28,-285.93 635.79,-282.48 635.79,-277.03 635.79,-273.23 631.19,-270.41 623.76,-268.55"/>
+<polygon fill="black" stroke="black" points="624.43,-265.12 613.99,-266.92 623.28,-272.02 624.43,-265.12"/>
+</g>
+<!-- Sub_B -->
+<g id="node6" class="node">
+<title>Sub_B</title>
+<polygon fill="#e8f5e9" stroke="black" points="591.41,-174.44 434.59,-174.44 434.59,-132.84 591.41,-132.84 591.41,-174.44"/>
+<text xml:space="preserve" text-anchor="middle" x="513" y="-157.84" font-family="Helvetica,sans-Serif" font-size="14.00">Sub Agent B</text>
+<text xml:space="preserve" text-anchor="middle" x="513" y="-141.04" font-family="Helvetica,sans-Serif" font-size="14.00">(Executor/Researcher)</text>
+</g>
+<!-- Lead_B&#45;&gt;Sub_B -->
+<g id="edge5" class="edge">
+<title>Lead_B-&gt;Sub_B</title>
+<path fill="none" stroke="black" d="M520.19,-247.57C516.43,-229.09 512.99,-204.99 511.39,-185.96"/>
+<polygon fill="black" stroke="black" points="514.89,-185.84 510.74,-176.1 507.91,-186.31 514.89,-185.84"/>
+</g>
+<!-- Lock_B -->
+<g id="node7" class="node">
+<title>Lock_B</title>
+<polygon fill="#ffcdd2" stroke="black" stroke-dasharray="5,2" points="796.11,-153.64 749.56,-187.61 656.44,-187.61 609.89,-153.64 656.44,-119.68 749.56,-119.68 796.11,-153.64"/>
+<text xml:space="preserve" text-anchor="middle" x="703" y="-157.84" font-family="Helvetica,sans-Serif" font-size="14.00">State: LOCKED</text>
+<text xml:space="preserve" text-anchor="middle" x="703" y="-141.04" font-family="Helvetica,sans-Serif" font-size="14.00">(Read-Only)</text>
+</g>
+<!-- Lead_B&#45;&gt;Lock_B -->
+<g id="edge8" class="edge">
+<title>Lead_B-&gt;Lock_B</title>
+<path fill="none" stroke="black" stroke-width="2" d="M543.31,-247.63C551.16,-233.43 562.26,-216.91 576.04,-205.61 590.55,-193.72 608.2,-184.31 625.66,-176.99"/>
+<polygon fill="black" stroke="black" stroke-width="2" points="625.08,-180.98 633.08,-174.03 622.5,-174.48 625.08,-180.98"/>
+<text xml:space="preserve" text-anchor="middle" x="625.52" y="-214.61" font-family="Helvetica,sans-Serif" font-size="10.00">Confidence Saturation</text>
+</g>
+<!-- Sub_B&#45;&gt;Lead_B -->
+<g id="edge6" class="edge">
+<title>Sub_B-&gt;Lead_B</title>
+<path fill="none" stroke="black" d="M521.01,-174.86C524.89,-191.47 528.66,-215.52 530.78,-236.01"/>
+<polygon fill="black" stroke="black" points="527.28,-236.11 531.67,-245.75 534.25,-235.48 527.28,-236.11"/>
+</g>
+<!-- Lock_B&#45;&gt;Lead_B -->
+<g id="edge14" class="edge">
+<title>Lock_B-&gt;Lead_B</title>
+<path fill="none" stroke="red" stroke-dasharray="1,5" d="M693.96,-198.56C689.8,-209.9 683.76,-221.26 675,-229.61 657.11,-246.67 632.95,-257.45 609.48,-264.28"/>
+<polygon fill="red" stroke="red" points="697.23,-199.82 696.94,-189.23 690.57,-197.69 697.23,-199.82"/>
+<text xml:space="preserve" text-anchor="middle" x="728.2" y="-214.61" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">Unlock &amp; Restart</text>
+</g>
+<!-- Lock_B&#45;&gt;Summary_Agent -->
+<g id="edge16" class="edge">
+<title>Lock_B-&gt;Summary_Agent</title>
+<path fill="none" stroke="red" stroke-width="2" d="M652.29,-122.22C627.24,-107.18 596.82,-88.93 570.55,-73.17"/>
+<polygon fill="red" stroke="red" stroke-width="2" points="573.68,-70.96 563.3,-68.82 570.07,-76.97 573.68,-70.96"/>
+<text xml:space="preserve" text-anchor="middle" x="671.42" y="-92.68" font-family="Helvetica,sans-Serif" font-size="10.00" fill="red">Consensus/Aggregation</text>
+</g>
+</g>
+</svg>
