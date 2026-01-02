@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/hero_banner.png" alt="DeepRareAgent Banner" width="100%" style="border-radius: 8px;">
+  <img src="images/hero_banner.png" alt="DeepRareAgent Banner" height="120px">
 </p>
 
 # DeepRareAgent
