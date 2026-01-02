@@ -1,132 +1,132 @@
-# LangGraph 项目模板
+<p align="center">
+  <img src="images/hero_banner.png" alt="DeepRareAgent Banner" width="100%" style="border-radius: 8px;">
+</p>
 
-这是一个基于 LangGraph 的空白项目模板，支持生成式 UI。
+# DeepRareAgent
 
-## 🚀 快速开始
+**面向罕见病诊断的多组 MDT 集成系统 (Multi-Team MDT Ensemble for Rare Disease Diagnosis)**
 
-### 1. 环境要求
+---
 
-- Python 3.11+
-- Node.js (可选，用于 UI 组件开发)
+## 项目简介
 
-### 2. 安装依赖
+**DeepRareAgent** 是一个专为罕见病诊断设计的 AI 辅助系统。其核心不是简单的"一条路"诊断，而是模拟医院里由多个独立团队参与的 **多组多学科会诊 (Multi-Team MDT)** 机制。
+
+**核心思想**：让多个"全能"的 MDT 团队各自独立分析同一个复杂病例，然后将各团队的诊断意见进行交叉验证与迭代拟合，最终输出一份高置信度的综合报告。
+
+![系统架构](images/multi_team_mdt_arch.png)
+
+---
+
+## 核心特性
+
+### 1. 多智能体团队并行 (Multi-Team Parallelism)
+
+系统可配置 **N 个独立的诊断组 (Group)**，如 `group_1`, `group_2`。每个 Group 是一个功能完整的 AI 团队：
+
+| 角色 | 说明 |
+|---|---|
+| **Main Agent (主控)** | 负责整体诊断规划、逻辑整合与报告撰写。 |
+| **Sub-Agent 1 (Phenotype Analyst)** | 负责调用 HPO 表型本体工具，将症状标准化。 |
+| **Sub-Agent 2 (Literature Researcher)** | 负责调用 PubMed、搜索引擎等工具检索证据。 |
+
+每个团队**独立进行**从症状分析、文献检索到报告输出的完整流程，彼此不干扰。
+
+### 2. 共识与拟合 (Consensus & Fitting)
+
+所有团队完成诊断后，系统不会简单取平均或投票。而是：
+1.  **Expert Review Node**: 一个专门的节点负责对比各组报告，提取冲突点和共同认知。
+2.  **Blackboard (公共黑板)**: 各组报告、分歧与共识会被发布到黑板上。
+3.  **多轮迭代 (Multi-Round Loop)**: 如果共识未达成，系统会启动新一轮诊断，各组阅读黑板上的信息后重新分析，直到达成共识或轮数耗尽。
+
+### 3. 三阶段流程
+
+整个系统分为三个主要阶段：
+
+| 阶段 | 节点 | 功能 |
+|---|---|---|
+| **P01: Pre-Diagnosis** | `prediagnosis` | 智能问诊，收集患者基本信息、症状、家族史。当信息足够时，判断是否需要启动深度诊断。 |
+| **P02: MDT Diagnosis** | `mdt_diagnosis` (子图) | 多组专家并行分析，经过多轮迭代达成共识。 |
+| **P03: Summary** | `summary` | 整合所有专家组报告，生成最终的综合诊断报告。 |
+
+---
+
+## 项目结构
+
+```
+DeepRareAgent/
+├── DeepRareAgent/
+│   ├── graph.py                    # 主图定义 (P01 -> P02 -> P03)
+│   ├── schema.py                   # 状态定义 (MainGraphState, MDTGraphState, ExpertGroupState)
+│   ├── p01pre_diagnosis_agent.py   # 预诊断智能体
+│   ├── p02_mdt/
+│   │   ├── graph.py                # MDT 子图定义
+│   │   ├── builddeepexportnode.py  # 专家组节点工厂 (构建 Main/Sub Agent 级联)
+│   │   ├── nodes.py                # 路由、扇出等辅助节点
+│   │   └── export_reviwer_node.py  # 专家互审/共识节点
+│   ├── p03summary_agent.py         # 汇总报告节点
+│   ├── tools/                      # 各类工具 (HPO, PubMed, 搜索等)
+│   └── prompts/                    # 各智能体的系统提示词
+├── config.yml                      # 主配置文件 (模型、API Key、Group 定义)
+└── langgraph.json                  # LangGraph 服务配置
+```
+
+---
+
+## 快速开始
+
+### 1. 安装依赖
 
 ```bash
-# 安装 Python 依赖
 pip install -e . "langgraph-cli[inmem]"
 ```
 
-### 3. 配置环境变量（可选）
+### 2. 配置
 
 ```bash
-# 复制环境变量模板
+# 复制配置模板
+cp config.example.yml config.yml
 cp .env.example .env
 
-# 编辑 .env 文件添加你的 API 密钥
+# 编辑 config.yml，填入你的 LLM API Key 和 Base URL
 ```
 
-### 4. 启动开发服务器
+### 3. 启动服务
 
 ```bash
-# 启动 LangGraph 开发服务器
 langgraph dev
 ```
 
-服务器将在以下地址启动：
-- 🚀 **API**: http://127.0.0.1:2024
-- 🎨 **Studio UI**: https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024
-- 📚 **API 文档**: http://127.0.0.1:2024/docs
+*   **API**: `http://127.0.0.1:2024`
+*   **LangGraph Studio**: `https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024`
 
-## 📁 项目结构
+---
 
-```
-multi_agent/
-├── src/
-│   ├── __init__.py
-│   └── agent/
-│       ├── __init__.py
-│       └── graph.py      # 你的图定义在这里
-├── pyproject.toml        # Python 项目配置
-├── langgraph.json         # LangGraph 配置
-├── .env.example          # 环境变量模板
-└── README.md             # 项目说明
-```
+## 配置说明
 
-## 🔧 自定义你的智能体
+在 `config.yml` 中，`multi_expert_diagnosis_agent` 下的每个 `group_*` 都是一个独立的诊断团队。你可以：
+*   增加或减少 Group 数量。
+*   为每个 Group 配置不同的模型（如 group_1 用 GPT-4，group_2 用 Claude）。
+*   为每个 Sub-Agent 配置不同的工具集。
 
-### 1. 修改图定义
-
-在 `src/agent/graph.py` 中定义你的智能体逻辑：
-
-```python
-from langchain_core.messages import AIMessage, HumanMessage
-from langgraph.graph import StateGraph
-from typing_extensions import TypedDict
-
-class State(TypedDict):
-    messages: list[HumanMessage | AIMessage]
-    # 添加你的状态字段
-
-def your_node(state: State) -> Dict:
-    # 实现你的节点逻辑
-    return {
-        "messages": [AIMessage(content="Hello!")]
-    }
-
-# 构建图
-graph = (
-    StateGraph(State)
-    .add_node("your_node", your_node)
-    .add_edge("__start__", "your_node")
-    .compile(name="your_agent")
-)
+```yaml
+multi_expert_diagnosis_agent:
+  group_1:
+    main_agent:
+      name: "Clinical_Lead_G1"
+      model_name: "gpt-4o"
+      ...
+    sub_agent:
+      sub_agent_1:  # Phenotype Analyst
+        ...
+      sub_agent_2:  # Literature Researcher
+        ...
+  group_2:
+    # ... 同上，可使用不同模型
 ```
 
-### 2. 添加生成式 UI 组件（可选）
+---
 
-1. 创建 UI 组件文件 `src/agent/ui.tsx`
-2. 在 `langgraph.json` 中添加 UI 配置
-3. 在节点中使用 `push_ui_message` 发送 UI 组件
+## 许可证
 
-### 3. 更新配置
-
-修改 `langgraph.json` 以匹配你的图结构：
-
-```json
-{
-  "$schema": "https://langgra.ph/schema.json",
-  "dependencies": ["."],
-  "graphs": {
-    "agent": "./src/agent/graph.py:graph"
-  },
-  "ui": {
-    "agent": "./src/agent/ui.tsx"  // 可选
-  },
-  "env": ".env.example",
-  "python_version": "3.12"
-}
-```
-
-## 🎨 生成式 UI 支持
-
-这个模板支持 LangGraph 的生成式 UI 功能，允许你：
-
-- 在后端定义 React 组件
-- 动态生成用户界面
-- 无需前端代码即可创建交互式应用
-
-更多详情请参考 [LangGraph 生成式 UI 文档](https://langchain-ai.github.io/langgraph/how-tos/generative_ui/)。
-
-## 📚 相关资源
-
-- [LangGraph 文档](https://langchain-ai.github.io/langgraph/)
-- [LangGraph API 参考](https://api.langchain.com/)
-- [LangSmith](https://smith.langchain.com/) - 用于调试和监控
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-## 📄 许可证
-
-MIT License - 详见 [LICENSE](LICENSE) 文件
+MIT License - 详见 [LICENSE](LICENSE)
