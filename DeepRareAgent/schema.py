@@ -58,7 +58,7 @@ class MainGraphState(TypedDict):
 
     # === 患者信息字段（传递给各子图）===
     patient_info: Dict[str, Any]                          # 结构化患者信息
-    summary_with_dialogue: str                            # 预诊断对话的摘要
+    summary_with_dialogue: str                            # 预诊断对话的摘要（对话历史总结）
     patient_portrait: str                                 # 患者结构化画像（文本形式）
 
     # === MDT 子图输出字段（从 MDT 接收）===

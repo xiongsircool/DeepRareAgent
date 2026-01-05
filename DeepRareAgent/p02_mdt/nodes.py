@@ -24,13 +24,22 @@ async def triage_to_mdt_node(state: Dict[str, Any],config: RunnableConfig) -> MD
     print("\n>>> [MDT Triage] 初始化专家会诊桌...")
     # 格式化患者画像
     patient_report = patient_info_to_text.invoke({"state": state})
+    # 获取预诊断阶段的对话总结
+    dialogue_summary = state.get("summary_with_dialogue", "")
+    
+    # 构造专家组初始消息（包含患者病例 + 对话总结）
+    if dialogue_summary:
+        initial_message = f"研究和讨论的患者病例信息如下:\n\n{patient_report}\n\n---\n\n**预诊问诊对话总结：**\n{dialogue_summary}"
+    else:
+        initial_message = f"研究和讨论的患者病例信息如下:\n\n{patient_report}"
+    
     # 初始化专家池
     group_configs = settings.multi_expert_diagnosis_agent.to_dict()
     expert_pool = {}
     for group_id in group_configs.keys():
         expert_pool[group_id] = {
             "group_id": group_id,
-            "messages": [HumanMessage(content=f"研究和讨论的患者病例信息如下:\n\n{patient_report}")],
+            "messages": [HumanMessage(content=initial_message)],
             "report": "等待诊断启动...",
             "evidences": [],
             "is_satisfied": False,

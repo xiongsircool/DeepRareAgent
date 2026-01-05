@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 # LangChain and Langgraph 基础组件
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import AIMessage, SystemMessage
+from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 from langchain_core.tools import tool
 from langgraph.runtime import Runtime
 from langgraph.types import Command
@@ -146,16 +146,40 @@ def create_pre_diagnosis_node(
                 break
 
         # 检测是否触发了深度诊断，如果是则添加系统提示
+        summary_with_dialogue = ''
         if result.get('start_diagnosis', False) and not state.get('start_diagnosis', False):
             print("\n🚀 触发深度诊断！")
             if final_ai_message:
                 content = final_ai_message.content
                 final_ai_message = AIMessage(content= (content+'\n\n<span style="color:red">**系统提示：检测到满足深度研究条件，正在为您跳转专家诊断模式...**</span>'))
+            
+            # 生成 summary_with_dialogue：调用 model 总结之前的对话
+            dialogue_text = "\n".join([
+                f"{'患者' if isinstance(m, HumanMessage) else '医生'}: {m.content}" 
+                for m in state.get('messages', [])
+                if hasattr(m, 'content') and m.content
+            ])
+            
+            summary_prompt = f"""请将以下医患对话总结为简洁的患者病情摘要，包括主诉、症状、病史等关键信息，供后续深度诊断参考：
+
+{dialogue_text}
+
+请用结构化的形式输出摘要（不超过500字）："""
+            
+            try:
+                summary_response = await model.ainvoke([SystemMessage(content=summary_prompt)])
+                summary_with_dialogue = summary_response.content
+                print(f"\n📝 对话摘要生成完成:\n{summary_with_dialogue[:200]}...")
+            except Exception as e:
+                print(f"\n⚠️ 生成对话摘要失败: {e}")
+                summary_with_dialogue = dialogue_text  # 降级：直接使用原始对话文本
+        
         # 只返回最后一条 AI 消息 + 其他状态更新
         # add_messages 会自动将这条消息追加到主图的 messages 列表
         return {
             'messages': [final_ai_message] if final_ai_message else [],
             'patient_info': result.get('patient_info', state.get('patient_info', {})),
+            'summary_with_dialogue': summary_with_dialogue,
             'start_diagnosis': result.get('start_diagnosis', state.get('start_diagnosis', False))
         }
 

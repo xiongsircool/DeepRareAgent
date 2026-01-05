@@ -127,6 +127,41 @@ multi_expert_diagnosis_agent:
 
 ---
 
+## 📚 参考与评估 (References & Benchmarking)
+
+DeepRareAgent 的设计与验证参考了以下 2024-2025 年的顶刊与前沿工作：
+
+| 来源 | 论文/项目 | 核心贡献与评估体系 |
+| :--- | :--- | :--- |
+| **ArXiv '24** | **RareAgents** (Chen et al.) | 提出了罕见病 MDT 框架，使用 **RareBench (1,197 病例)** 进行 Top-K 准确率评估，是本项目的直接对标基准。 |
+| **Nature '25** | **AMIE** (Google) | 定义了 AI 问诊的黄金标准：**模拟问诊 (Simulated Consultations)** 与双盲随机对照试验 (RCT)。 |
+| **ArXiv '25** | **MDTeamGPT** | 验证了多 Agents 在 MDT 场景下的共识机制，使用 MedQA 和 PubMedQA 评估，并引入了人类专家 blind review。 |
+| **ArXiv '25** | **DiagnosisArena** | 超越简单问答，使用 1,113 个结构化病例评估 Agent 的 **诊断推理路径 (Reasoning Paths)**。 |
+| **NEJM AI '25** | **MedAgentBench** | 在虚拟 EHR 环境中测试 Agent 模拟医生全流程操作的能力（开药、查病历）。 |
+| **NeurIPS '24** | **MDAgents** | 提出了 "Adaptive Collaboration"，证明了根据病例难度动态调整 Agent 数量的有效性。 |
+
+---
+
+## 🔮 2026 创新路线图 (Future Roadmap)
+
+为了应对 2026 年的学术挑战，本项目计划在以下维度进行架构升维：
+
+### 1. 认知架构升级：对抗性协作 (Adversarial Collaboration)
+*   引入 **"Red Team" (红队)** 机制：在共识达成前，强制实例化一个"反对者"智能体，专门寻找诊断逻辑漏洞。
+*   **目的**：解决群体思维 (Groupthink) 和级联幻觉，从单纯的"达成共识"进化为"经得起挑战的真理"。
+
+### 2. Neuro-Symbolic 融合：知识图谱与病例库 (Proposed)
+*   **Knowledge Graph Agent**: 接入生物医学知识图谱 (如 Hetionet, PrimeKG)，进行确定性的多跳逻辑推理，弥补 LLM 的概率性缺陷。
+*   **Similar Case Retrieval Agent**: 基于 Case-Based Reasoning (CBR) 思想，检索历史相似病例库，提供"循证"支持。
+
+### 3. 多模态原生 (Native Multimodal)
+*   扩展输入的维度，支持 **VCF 基因数据** 的直接解析与 **医学影像 (DICOM)** 的特征提取，将文本诊断扩展为多模态综合诊断。
+
+### 4. 可信 AI：诊断归因图 (Diagnostic Attribution)
+*   输出结果不再是单一文本，而是包含证据溯源的 **归因图**，明确每一条诊断结论引用的具体文献、指南条款或图谱节点。
+
+---
+
 ## 许可证
 
-MIT License - 详见 [LICENSE](LICENSE)
+MIT License - 详见 [LICENSE](LICENSE)文件
