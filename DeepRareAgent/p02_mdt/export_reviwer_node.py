@@ -1,4 +1,5 @@
 import asyncio
+import os
 from typing import Any, Dict, List, Optional, Callable
 from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from DeepRareAgent.schema import MDTGraphState, ExpertGroupState, SharedBlackboard
@@ -39,13 +40,29 @@ def build_reviwer_messages(state: MDTGraphState):
                 other_reports += f"==========={other_group_id}================\n {other_expert['report']}\n"
 
         # reviwer_prompt 1,表示你和你的组已经完成了诊断 2,设置格式化输出要求输出 reinvestigate_reason，is_satisfied 两个字段
-        reviwer_prompt = f"""这是第{state.get("round_count", 1)}轮的专家审核，请你基于其他专家的报告，进行大胆自信的平谷,假如你觉得你的结果和团队在患者诊断报告上没有什么大的修改或者疑惑的地方。请直接返回你的最终诊断报告。
-        最后的输出格式为json:
-        {{
-            "reinvestigate_reason": "", # 如果不满意，是因为发现了什么新疑点或被其他组修正了认知。
-            "is_satisfied": True # 如果满意，表示认为结论已闭环
-        }}
-        """
+
+        # Load reviewer prompt from file
+        # Try to get path from config first, otherwise use default location
+        prompt_path = getattr(settings.mdt_config, "reviewer_prompt_path", None)
+        
+        if not prompt_path:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            prompt_path = os.path.join(current_dir, "..", "prompts", "02deepagent_reviwer_prompt.txt")
+
+        try:
+            with open(prompt_path, "r", encoding="utf-8") as f:
+                reviwer_prompt_template = f.read()
+            reviwer_prompt = reviwer_prompt_template.replace("{round_count}", str(state.get("round_count", 1)))
+        except Exception as e:
+            # Fallback if file not found or other error
+            print(f"Warning: Could not load reviewer prompt from {prompt_path}: {e}")
+            reviwer_prompt = f"""这是第{state.get("round_count", 1)}轮的专家审核，请你基于其他专家的报告，进行大胆自信的评估。
+            最后的输出格式为json:
+            {{
+                "reinvestigate_reason": "",
+                "is_satisfied": True
+            }}
+            """
 
         patient_report = state.get("patient_portrait", "")
         # 在1的位置插入患者病例信息
@@ -92,6 +109,15 @@ def expert_reviwer_node(state: MDTGraphState,config: RunnableConfig) -> MDTGraph
         state["expert_pool"][group_id]["is_satisfied"] = is_satisfied
         state["expert_pool"][group_id]["reinvestigate_reason"] = reinvestigate_reason
 
+        # 输出专家审阅结果（方便调试和解读）
+        print(f"\n{'=' * 60}")
+        print(f">>> [专家审阅] {group_id}")
+        print(f"{'=' * 60}")
+        print(f"  满意度: {'[PASS] 满意' if is_satisfied else '[FAIL] 不满意'}")
+        if reinvestigate_reason:
+            print(f"  复查原因: {reinvestigate_reason}")
+        print(f"{'=' * 60}\n")
+
         # 添加模型的审阅回复到messages
         state["expert_pool"][group_id]["messages"].append(response)
 
@@ -128,7 +154,7 @@ def expert_reviwer_node(state: MDTGraphState,config: RunnableConfig) -> MDTGraph
         if not expert.get("has_error", False)
     )
 
-    progress_msg = f"✅ 第 {state['round_count'] - 1} 轮专家互审完成 (满意度: {satisfied_count}/{total_count})"
+    progress_msg = f"[PASS] 第 {state['round_count'] - 1} 轮专家互审完成 (满意度: {satisfied_count}/{total_count})"
     if all_satisfied:
         progress_msg += " - 已达成共识！"
     elif state["round_count"] > state.get("max_rounds", 3):

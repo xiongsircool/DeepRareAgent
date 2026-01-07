@@ -113,7 +113,7 @@ if __name__ == "__main__":
         llm = create_llm_from_config(p01_cfg)
         print(f"  创建成功: {type(llm).__name__}")
     except Exception as e:
-        print(f"  ❌ 创建失败: {e}")
+        print(f"  [FAIL] 创建失败: {e}")
 
     # 测试 P02 配置
     try:
@@ -127,8 +127,8 @@ if __name__ == "__main__":
         llm = create_llm_from_config(p02_main)
         print(f"  创建成功: {type(llm).__name__}")
     except Exception as e:
-        print(f"  ❌ 创建失败: {e}")
+        print(f"  [FAIL] 创建失败: {e}")
         import traceback
         traceback.print_exc()
 
-    print("\n✅ 模型工厂测试完成")
+    print("\n[PASS] 模型工厂测试完成")

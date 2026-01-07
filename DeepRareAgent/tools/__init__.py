@@ -42,27 +42,6 @@ from .evidencemanager import extract_evidences, save_evidences
 from .patientinfo import PatientInfoManger
 
 
-# === 工具包装函数 ===
-@tool("lit_sense_search")
-def lit_sense_search_tool(
-    query: str,
-    rerank: bool = True,
-    base_url: str = "https://www.ncbi.nlm.nih.gov/research/litsense-api/api/",
-) -> Dict[str, Any]:
-    """
-    调用 NCBI LitSense 做语义级别的文献片段检索。
-
-    Args:
-        query: 检索查询语句
-        rerank: 是否对结果重新排序
-        base_url: LitSense API 基础 URL
-
-    Returns:
-        包含相关段落及评分的字典,适合快速抓取证据片段
-    """
-    return lit_sense_search(query=query, rerank=rerank, base_url=base_url).model_dump()
-
-
 # === 工具列表构建函数 ===
 def get_all_tools() -> List[Any]:
     """
@@ -80,7 +59,7 @@ def get_all_tools() -> List[Any]:
         search_wikipedia_tool,
         # 文献检索工具
         search_pubmed,
-        lit_sense_search_tool,
+        lit_sense_search,  # 直接使用原始工具
     ]
 
 
@@ -139,7 +118,7 @@ default_TOOL_EXCLUDE_LIST = {
     "search_baidu_tool":search_baidu_tool,
     "search_wikipedia_tool":search_wikipedia_tool,
     "search_pubmed":search_pubmed,
-    "lit_sense_search_tool":lit_sense_search_tool,
+    "lit_sense_search": lit_sense_search,  # 更新为原始工具
 }
 
 
@@ -163,7 +142,7 @@ __all__ = [
     "search_wikipedia_tool",
     # 文献检索工具
     "search_pubmed",
-    "lit_sense_search_tool",
+    "lit_sense_search",  # 更新导出
     # BioMCP 工具
     "load_biomcp_tools",
     "load_biomcp_tools_sync",

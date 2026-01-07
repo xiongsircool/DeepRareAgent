@@ -31,7 +31,7 @@ pip install requests pydantic
 """
 
 import requests
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 
@@ -68,7 +68,7 @@ def lit_sense_search(
     query: str,
     rerank: bool = True,
     base_url: str = "https://www.ncbi.nlm.nih.gov/research/litsense-api/api/"
-) -> LitSenseSearchResult:
+) -> Dict[str, Any]:
     """LitSense 语义检索，返回片段与评分"""
     params = {
         "query": query,
@@ -79,36 +79,43 @@ def lit_sense_search(
         resp.raise_for_status()
         data = resp.json()
     except Exception as exc:
-        return LitSenseSearchResult(query=query, results=[], error=str(exc))
+        return {
+            "query": query,
+            "results": [],
+            "error": str(exc)
+        }
 
-    results: List[LitSenseQueryResult] = []
+    results = []
     for rec in data:
-        r = LitSenseQueryResult(
-            score=rec.get("score", 0.0),
-            pmcid=rec.get("pmcid"),
-            pmid=rec.get("pmid"),
-            text=rec.get("text", ""),
-            annotations=rec.get("annotations", []),
-            section=rec.get("section")
-        )
-        results.append(r)
+        results.append({
+            "score": rec.get("score", 0.0),
+            "pmcid": rec.get("pmcid"),
+            "pmid": rec.get("pmid"),
+            "text": rec.get("text", ""),
+            "annotations": rec.get("annotations", []),
+            "section": rec.get("section")
+        })
 
-    return LitSenseSearchResult(query=query, results=results, error=None)
+    return {
+        "query": query,
+        "results": results,
+        "error": None
+    }
 
 
 # --- 测试入口 ---
 if __name__ == "__main__":
     q = "Breast cancers with HER2 amplification"
     res = lit_sense_search.invoke({"query": q, "rerank": True})
-    print("Query:", res.query)
-    if res.error:
-        print("Error:", res.error)
+    print("Query:", res["query"])
+    if res.get("error"):
+        print("Error:", res["error"])
     else:
-        for i, rec in enumerate(res.results[:5]):
+        for i, rec in enumerate(res["results"][:5]):
             print(f"--- Result {i+1} ---")
-            print("Score:", rec.score)
-            print("PMID:", rec.pmid, "PMC:", rec.pmcid)
-            print("Text:", rec.text)
-            print("Annotations:", rec.annotations)
-            print("Section:", rec.section)
+            print("Score:", rec["score"])
+            print("PMID:", rec.get("pmid"), "PMC:", rec.get("pmcid"))
+            print("Text:", rec["text"])
+            print("Annotations:", rec["annotations"])
+            print("Section:", rec.get("section"))
             print()

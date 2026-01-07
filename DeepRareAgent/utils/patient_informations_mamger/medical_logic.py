@@ -55,7 +55,7 @@ class PatientManager:
         record.setdefault("_src", "agent")
         
         items.append(record)
-        return f"✅ 已追加记录到 [{section}] (当前共 {len(items)} 条)"
+        return f"[PASS] 已追加记录到 [{section}] (当前共 {len(items)} 条)"
 
     def update(self, path: str, payload: Dict) -> str:
         """
@@ -81,7 +81,7 @@ class PatientManager:
             # 更新现有记录
             items[target_idx].update(payload)
             items[target_idx]["_t"] = self._now_iso() # 更新修改时间
-            return f"✅ 已更新 [{section}] 中匹配的记录。"
+            return f"[PASS] 已更新 [{section}] 中匹配的记录。"
         else:
             # 没找到匹配项 -> 自动转为新增
             # 确保 key 存在
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     # 结果验证
     # =================================================
     print("\n" + "="*40)
-    print("📊 [视图 1] AI 看到的摘要 (get_flat_summary)")
+    print("[INFO] [视图 1] AI 看到的摘要 (get_flat_summary)")
     print("="*40)
     print(pm.get_flat_summary())
 
@@ -175,18 +175,18 @@ if __name__ == "__main__":
     # --- 自动化断言分析 ---
     data = pm.export()
     
-    print("\n🔍 自动逻辑分析:")
+    print("\n[SEARCH] 自动逻辑分析:")
     
     # 1. 验证基本信息是否更新成功
     age_record = [x for x in data["basic"] if x["k"] == "age"][0]
     if age_record["value"] == 46:
-        print("✅ [Pass] 年龄更新成功 (45 -> 46)")
+        print("[PASS] [Pass] 年龄更新成功 (45 -> 46)")
     else:
-        print("❌ [Fail] 年龄更新失败")
+        print("[FAIL] [Fail] 年龄更新失败")
 
     # 2. 验证发烧记录是否保留了历史 (应该是 2 条)
     fever_records = [x for x in data["phenotypes"] if x["k"] == "fever"]
     if len(fever_records) == 2:
-        print(f"✅ [Pass] 发烧历史保留成功 (共 {len(fever_records)} 条)")
+        print(f"[PASS] [Pass] 发烧历史保留成功 (共 {len(fever_records)} 条)")
     else:
-        print(f"❌ [Fail] 发烧历史丢失")
+        print(f"[FAIL] [Fail] 发烧历史丢失")

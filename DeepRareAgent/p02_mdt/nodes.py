@@ -6,7 +6,7 @@
 
 import asyncio
 from typing import Any, Dict, List, Optional, Callable
-from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
+from langchain_core.messages import HumanMessage, AIMessage, BaseMessage,ToolMessage
 from DeepRareAgent.schema import MDTGraphState, ExpertGroupState, SharedBlackboard
 from DeepRareAgent.config import settings
 from DeepRareAgent.tools.patientinfo import patient_info_to_text
@@ -27,19 +27,27 @@ async def triage_to_mdt_node(state: Dict[str, Any],config: RunnableConfig) -> MD
     # 获取预诊断阶段的对话总结
     dialogue_summary = state.get("summary_with_dialogue", "")
     
+    # 日志：显示接收到的对话总结
+    if dialogue_summary:
+        print(f"[INFO] 接收到对话总结（{len(dialogue_summary)} 字符）:")
+        print("-" * 80)
+        print(dialogue_summary[:200] + "..." if len(dialogue_summary) > 200 else dialogue_summary)
+        print("-" * 80)
+    else:
+        print("[WARNING] 未接收到对话总结 (summary_with_dialogue 为空)")
+    
     # 构造专家组初始消息（包含患者病例 + 对话总结）
     if dialogue_summary:
         initial_message = f"研究和讨论的患者病例信息如下:\n\n{patient_report}\n\n---\n\n**预诊问诊对话总结：**\n{dialogue_summary}"
     else:
         initial_message = f"研究和讨论的患者病例信息如下:\n\n{patient_report}"
-    
     # 初始化专家池
     group_configs = settings.multi_expert_diagnosis_agent.to_dict()
     expert_pool = {}
     for group_id in group_configs.keys():
         expert_pool[group_id] = {
             "group_id": group_id,
-            "messages": [HumanMessage(content=initial_message)],
+            "messages": [AIMessage(content=initial_message)],
             "report": "等待诊断启动...",
             "evidences": [],
             "is_satisfied": False,
@@ -51,8 +59,10 @@ async def triage_to_mdt_node(state: Dict[str, Any],config: RunnableConfig) -> MD
     max_rounds = getattr(settings.mdt_config, 'max_rounds', 3) if hasattr(settings, 'mdt_config') else 3
 
     return {
-        "messages": [AIMessage(content="🔬 正在初始化多专家会诊系统，已分配 {} 个专家组...".format(len(expert_pool)))],
+        "messages": [AIMessage(content=initial_message),
+                     AIMessage(content=f"[LAB] 正在初始化多专家会诊系统，已分配 {len(expert_pool)} 个专家组...")],
         "patient_info": state.get("patient_info", {}),  # 传递患者信息
+        "summary_with_dialogue": dialogue_summary,  # 保留对话摘要，供后续节点使用
         "patient_portrait": patient_report,
         "expert_pool": expert_pool,
         "blackboard": {

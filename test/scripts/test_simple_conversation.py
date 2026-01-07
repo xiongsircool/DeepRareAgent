@@ -35,11 +35,11 @@ async def test_simple():
 
     try:
         result1 = await prediag_node(state1)
-        print(f"✅ 第1轮成功")
+        print(f"[PASS] 第1轮成功")
         print(f"   Messages 数量: {len(result1['messages'])}")
         print(f"   回复: {result1['messages'][0].content[:80]}...")
     except Exception as e:
-        print(f"❌ 第1轮失败: {e}")
+        print(f"[FAIL] 第1轮失败: {e}")
         return False
 
     # 第2轮
@@ -52,11 +52,11 @@ async def test_simple():
 
     try:
         result2 = await prediag_node(state2)
-        print(f"✅ 第2轮成功")
+        print(f"[PASS] 第2轮成功")
         print(f"   Messages 数量: {len(result2['messages'])}")
         print(f"   回复: {result2['messages'][0].content[:80]}...")
     except Exception as e:
-        print(f"❌ 第2轮失败: {e}")
+        print(f"[FAIL] 第2轮失败: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -71,17 +71,17 @@ async def test_simple():
 
     try:
         result3 = await prediag_node(state3)
-        print(f"✅ 第3轮成功")
+        print(f"[PASS] 第3轮成功")
         print(f"   Messages 数量: {len(result3['messages'])}")
         print(f"   回复: {result3['messages'][0].content[:80]}...")
     except Exception as e:
-        print(f"❌ 第3轮失败: {e}")
+        print(f"[FAIL] 第3轮失败: {e}")
         import traceback
         traceback.print_exc()
         return False
 
     print("\n" + "=" * 60)
-    print("🎉 所有轮次对话成功！")
+    print("[SUCCESS] 所有轮次对话成功！")
     print("=" * 60)
     return True
 

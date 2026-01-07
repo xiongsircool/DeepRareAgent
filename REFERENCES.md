@@ -4,7 +4,7 @@
 
 ---
 
-## 🏗️ 多智能体架构与 MDT 模拟 (Multi-Agent Architectures & MDT)
+## [ARCH] 多智能体架构与 MDT 模拟 (Multi-Agent Architectures & MDT)
 
 | 年份 | 来源 | 论文标题 | 核心贡献与 DeepRareAgent 的关联 |
 | :--- | :--- | :--- | :--- |
@@ -28,7 +28,7 @@
 
 ---
 
-## 📊 评估基准与方法论 (Benchmarks & Methodology)
+## [INFO] 评估基准与方法论 (Benchmarks & Methodology)
 
 | 年份 | 来源 | 论文标题 | 核心贡献与 DeepRareAgent 的关联 |
 | :--- | :--- | :--- | :--- |

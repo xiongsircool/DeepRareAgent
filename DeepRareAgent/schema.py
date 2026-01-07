@@ -68,4 +68,9 @@ class MainGraphState(TypedDict):
     round_count: int                                                    # 当前博弈轮数
     max_rounds: int                                                     # 最大限制轮数
 
+    # === MDT 定制化summary_agent输出风格（采用str来描述字段）===
+    summary_style: str
+    
+    
+
 

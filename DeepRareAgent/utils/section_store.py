@@ -38,18 +38,18 @@ SectionStore 是一个为 LLM/Agent 工作负载优化的轻量级分层存储�
 --------------------------
 支持三种灵活的寻址语法：
 
-  📌 L0 - 索引访问 (Index-based)
+  [NOTE] L0 - 索引访问 (Index-based)
      语法: section[index]
      示例: exams[0]           # 获取第0条检查记录
            phenotypes[-1]     # 获取最后一条症状记录
 
-  📌 L1 - 键值访问 (Key-based)
+  [NOTE] L1 - 键值访问 (Key-based)
      语法: section:key
      示例: basic:name         # 匹配 k='name' 的记录
            exams:blood_test   # 匹配 k='blood_test' 的记录
      规则: 默认返回/更新最后一条匹配项 (pick=last)
 
-  📌 L2 - 条件查询 (Query-based)
+  [NOTE] L2 - 条件查询 (Query-based)
      语法: section?field1=value1&field2>value2&pick=first/last/all
      示例: exams?k=FPG&value>=7.0&pick=last     # 查询血糖≥7.0的最后一条
            phenotypes?onset=yesterday&pick=all  # 查询昨天发作的所有症状
@@ -70,9 +70,9 @@ SectionStore 是一个为 LLM/Agent 工作负载优化的轻量级分层存储�
 默认行为 (Default Behaviors)
 ---------------------------
   📖 读取 (get):    多条命中时返回最后一条 (pick=last)
-  ✏️  更新 (set):    更新最后一条匹配项，无匹配时自动新增
+  [EDIT]  更新 (set):    更新最后一条匹配项，无匹配时自动新增
   ➕ 添加 (add):    总是追加新记录，保留历史
-  🗑️  删除 (remove): 默认删除所有匹配项 (可用 pick 控制)
+  [DEL]  删除 (remove): 默认删除所有匹配项 (可用 pick 控制)
 
 核心方法 (Core Methods)
 -----------------------
@@ -104,25 +104,25 @@ SectionStore 是一个为 LLM/Agent 工作负载优化的轻量级分层存储�
 使用示例 (Usage Examples)
 -------------------------
 
-1️⃣ 基本信息写入 (单条)
+[1] 基本信息写入 (单条)
    store.set("basic:name", {"k": "name", "value": "张三"})
    store.set("basic:age", {"k": "age", "value": 45, "unit": "岁"})
 
-2️⃣ 症状记录 (多条历史)
+[2] 症状记录 (多条历史)
    store.add("phenotypes", {"k": "fever", "value": 38.5, "onset": "2天前"})
    store.add("phenotypes", {"k": "cough", "value": "干咳", "duration": "1周"})
 
-3️⃣ 检查结果更新 (条件更新)
+[3] 检查结果更新 (条件更新)
    store.set("exams?k=FPG&pick=last", {"value": 7.2, "unit": "mmol/L"})
 
-4️⃣ 条件查询
+[4] 条件查询
    # 查询所有昨天发作的症状
    symptoms = store.find("phenotypes", "onset=yesterday", pick="all")
    
    # 查询最近的血糖值
    glucose = store.get("exams?k=FPG&pick=last", field="value")
 
-5️⃣ 批量写入 (推荐用于 Agent)
+[5] 批量写入 (推荐用于 Agent)
    batch_tool = make_section_store_tools(store)[5]  # section_batch
    batch_tool.invoke({
        "facts": [
@@ -132,24 +132,24 @@ SectionStore 是一个为 LLM/Agent 工作负载优化的轻量级分层存储�
        ]
    })
 
-6️⃣ 持久化
+[6] 持久化
    store.save_json("patient_001.json")      # 保存
    store.load_json("patient_001.json")      # 加载
 
 设计理念 (Design Philosophy)
 ---------------------------
-✅ 为 LLM/Agent 优化：简洁的语法、批量操作、自动元数据管理
-✅ 医疗场景友好：分区设计契合病历结构、支持时间序列
-✅ 灵活可扩展：任意字段、条件查询、可持久化
-✅ 隐私保护：默认不向 LLM 暴露元数据（_id, _t, _src 等）
+[PASS] 为 LLM/Agent 优化：简洁的语法、批量操作、自动元数据管理
+[PASS] 医疗场景友好：分区设计契合病历结构、支持时间序列
+[PASS] 灵活可扩展：任意字段、条件查询、可持久化
+[PASS] 隐私保护：默认不向 LLM 暴露元数据（_id, _t, _src 等）
 
 适用场景 (Ideal Use Cases)
 --------------------------
-  • 🏥 医疗诊断 Agent 的患者信息采集
-  • 📊 时间序列数据管理（检查结果、生命体征）
-  • 📝 结构化日志记录
+  • [MEDICAL] 医疗诊断 Agent 的患者信息采集
+  • [INFO] 时间序列数据管理（检查结果、生命体征）
+  • [NOTE] 结构化日志记录
   • 💬 LLM 对话历史管理
-  • 🤖 Agent 状态管理
+  • [AI] Agent 状态管理
 
 =========================================================================================
 """
@@ -981,5 +981,5 @@ if __name__ == "__main__":
     print(f"当前分区: {sections}")
 
     print("\n" + "=" * 80)
-    print("✅ 所有测试完成")
+    print("[PASS] 所有测试完成")
     print("=" * 80)

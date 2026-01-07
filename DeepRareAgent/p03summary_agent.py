@@ -1,109 +1,189 @@
 # -*- coding: utf-8 -*-
 """
 汇总诊断智能体 (P03)
-- 整合多个专家组的诊断报告
-- 生成综合的最终诊断报告
-- 符合临床诊断文书规范
+
+整合多个专家组的诊断报告，生成符合临床规范的综合诊断报告。
 """
+
 from typing import Any, Dict
-from langchain_core.messages import HumanMessage, AIMessage
+from pathlib import Path
+
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 
 from DeepRareAgent.config import settings
 from DeepRareAgent.schema import MainGraphState
 from DeepRareAgent.utils.model_factory import create_llm_from_config
+from DeepRareAgent.utils.report_utils import process_expert_report_references
+
+
+def _load_system_prompt() -> str:
+    """
+    加载系统提示词
+    
+    Returns:
+        系统提示词内容
+        
+    Raises:
+        FileNotFoundError: 如果提示词文件不存在
+    """
+    prompt_path = settings.summary_agent.system_prompt_path
+    
+    if not Path(prompt_path).exists():
+        raise FileNotFoundError(
+            f"汇总智能体提示词文件不存在: {prompt_path}\n"
+            f"请检查配置文件中的 summary_agent.system_prompt_path"
+        )
+    
+    with open(prompt_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+def _format_expert_reports(
+    reports: Dict[str, str],
+    expert_pool: Dict[str, Any]
+) -> str:
+    """
+    格式化专家报告，处理引用并整合
+    
+    Args:
+        reports: 专家组报告字典 {group_id: report}
+        expert_pool: 专家池，包含证据列表
+        
+    Returns:
+        格式化后的所有报告文本
+    """
+    formatted_reports = []
+    
+    for group_id, report in reports.items():
+        # 处理证据引用
+        expert_data = expert_pool.get(group_id, {})
+        evidences = expert_data.get("evidences", [])
+        
+        if evidences:
+            report = process_expert_report_references(report, evidences)
+        
+        # 格式化单个报告
+        formatted_report = f"""
+{'=' * 60}
+专家组: {group_id}
+{'=' * 60}
+
+{report}
+"""
+        formatted_reports.append(formatted_report)
+    
+    return "\n".join(formatted_reports)
 
 
 def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any]:
     """
     汇总节点：整合多位专家的诊断报告，生成最终综合诊断
-
-    输入：
-        state: MainGraphState，包含 blackboard.published_reports
-
-    输出：
-        更新后的状态，包含 final_report 字段
+    
+    Args:
+        state: 主图状态，包含专家组报告
+        config: 运行配置
+        
+    Returns:
+        包含最终报告的状态更新
+        
+    Raises:
+        ValueError: 如果没有专家报告
+        FileNotFoundError: 如果提示词文件不存在
+        Exception: LLM 调用失败时抛出
     """
-    print("\n" + "=" * 60)
-    print(">>> [汇总节点] 开始整合专家诊断报告...")
-    print("=" * 60)
-
-    # 1. 提取专家报告
+    print("\n" + "=" * 80)
+    print(">>> [汇总节点] 开始整合专家诊断报告")
+    print("=" * 80)
+    
+    # 1. 验证输入
     blackboard = state.get("blackboard", {})
     reports = blackboard.get("published_reports", {})
-
+    
     if not reports:
-        print("    警告：未找到任何专家报告，返回空报告")
-        error_msg = "错误：未能获取专家诊断报告，无法生成综合诊断。"
-        return {
-            "messages": [AIMessage(content=error_msg)],
-            "final_report": error_msg
-        }
-
-    print(f"    专家组数量: {len(reports)}")
+        error_msg = "错误：未找到任何专家报告，无法生成综合诊断"
+        print(f"[ERROR] {error_msg}")
+        raise ValueError(error_msg)
+    
+    print(f"\n[INFO] 专家组数量: {len(reports)}")
     for group_id in reports.keys():
-        print(f"    - {group_id}")
-
-    # 2. 整合所有专家报告
-    all_reports_text = ""
-    for group_id, report in reports.items():
-        all_reports_text += f"\n\n{'=' * 60}\n"
-        all_reports_text += f"专家组: {group_id}\n"
-        all_reports_text += f"{'=' * 60}\n\n"
-        all_reports_text += report
-
-    # 3. 获取患者画像（可选，用于报告开头）
+        print(f"   - {group_id}")
+    
+    # 2. 格式化专家报告并收集所有证据
+    print("\n[NOTE] 整合专家报告...")
+    expert_pool = state.get("expert_pool", {})
+    all_reports_text = _format_expert_reports(reports, expert_pool)
+    
+    # 收集所有证据，形成统一的证据池供汇总报告使用
+    all_evidences = []
+    for group_id in sorted(reports.keys()):  # 排序确保顺序一致
+        expert_data = expert_pool.get(group_id, {})
+        evidences = expert_data.get("evidences", [])
+        all_evidences.extend(evidences)
+    
+    print(f"📚 收集到 {len(all_evidences)} 条证据供汇总引用")
+    
+    # 3. 加载系统提示词
+    print("📖 加载系统提示词...")
+    system_prompt = _load_system_prompt()
+    
+    # 4. 构建用户提示词（支持自定义格式）
     patient_portrait = state.get("patient_portrait", "")
+    summary_style = state.get("summary_style", "")
+    
+    # 如果有自定义格式要求，使用自定义；否则使用默认
+    if summary_style:
+        # 用户自定义报告格式
+        format_instruction = f"""
+请按照以下格式要求生成报告：
 
-    # 4. 构建汇总提示词
-    user_prompt = f"""请基于以下专家组的诊断报告，生成一份综合的最终诊断报告。
-
-{'患者信息：' + chr(10) + patient_portrait + chr(10) if patient_portrait else ''}
-专家组诊断报告：
-{all_reports_text}
-
-请按照系统提示词中的要求，生成结构化的综合诊断报告。
+{summary_style}
 """
+    else:
+        # 默认格式要求
+        format_instruction = """
+请严格按照系统提示词的标准格式，直接生成一份临床诊断报告。
 
-    # 5. 调用 LLM 生成汇总报告
-    print("    正在调用 LLM 生成综合诊断报告...")
-
-    try:
-        llm = create_llm_from_config(settings.summary_agent)
-        messages = [HumanMessage(content=user_prompt)]
-        response = llm.invoke(messages)
-
-        final_report = response.content
-
-        print(f"    综合报告生成成功（长度: {len(final_report)} 字符）")
-        print("=" * 60 + "\n")
-
-        # 返回两个信息：
-        # 1. messages - 添加 AIMessage 到对话历史
-        # 2. final_report - 最终报告内容
-        return {
-            "messages": [AIMessage(content=final_report)],
-            "final_report": final_report
-        }
-
-    except Exception as e:
-        print(f"    错误：汇总报告生成失败 - {str(e)}")
-        print("=" * 60 + "\n")
-
-        # 返回降级方案：直接拼接专家报告
-        fallback_report = f"""# 综合诊断报告（降级模式）
-
-注意：由于系统错误，以下为各专家组报告的直接整合，未经 AI 汇总处理。
-
-{all_reports_text}
-
----
-错误信息：{str(e)}
+要求：
+- 明确给出诊断结论，不要描述专家讨论过程
+- 提供具体的检查和治疗建议
+- 包含实用的随访计划和注意事项
+- 使用患者和医生都能理解的专业语言
+- 可在关键诊断依据处使用 <ref>N</ref> 引用专家报告中的证据，增强可追溯性
 """
-        return {
-            "messages": [AIMessage(content=fallback_report)],
-            "final_report": fallback_report
-        }
+    
+    user_prompt = f"""以下是患者的临床信息和多位专家的诊断分析，请为患者出具正式的罕见病诊断报告。
+
+{'【患者信息】' + chr(10) + patient_portrait + chr(10) if patient_portrait else ''}
+【专家诊断分析】
+{all_reports_text}
+{format_instruction}
+"""
+    
+    # 5. 调用 LLM 生成报告
+    print("[LLM] 调用 LLM 生成综合诊断报告...")
+    
+    llm = create_llm_from_config(settings.summary_agent)
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt)
+    ]
+    
+    response = llm.invoke(messages)
+    final_report = response.content
+    
+    # 处理汇总报告中的证据引用（如果LLM使用了 <ref> 标签）
+    if all_evidences:
+        final_report = process_expert_report_references(final_report, all_evidences)
+    
+    print(f"\n[SUCCESS] 综合报告生成成功（{len(final_report)} 字符）")
+    print("=" * 80 + "\n")
+    
+    # 6. 返回结果
+    return {
+        "messages": [AIMessage(content=final_report)],
+        "final_report": final_report
+    }
 
 
 # 导出
@@ -123,12 +203,12 @@ if __name__ == "__main__":
                 "group_1": """# 诊断报告 - 专家组1
 
 ## 诊断意见
-法布雷病（Fabry Disease）- 高度怀疑
+法布雷病（Fabry Disease）- 高度怀疑<ref>1</ref>
 
 ## 主要依据
 1. 四肢阵发性疼痛（典型 Fabry 危象）
 2. 少汗症（自主神经受累）
-3. 皮肤血管角质瘤（特征性表现）
+3. 皮肤血管角质瘤（特征性表现）<ref>2</ref>
 4. 家族史符合 X-连锁遗传
 
 ## 建议检查
@@ -152,7 +232,17 @@ if __name__ == "__main__":
         },
         "patient_info": {},
         "summary_with_dialogue": "",
-        "expert_pool": {},
+        "expert_pool": {
+            "group_1": {
+                "evidences": [
+                    "患者自述手脚疼痛，像烧灼一样，尤其夏天严重。",
+                    "体检发现躯干部位有红色小点，压之不退色。"
+                ]
+            },
+            "group_2": {
+                "evidences": []
+            }
+        },
         "round_count": 2,
         "max_rounds": 3
     }

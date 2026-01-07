@@ -9,4 +9,5 @@ class PreDiagnosisState(TypedDict):
     
     # patient_info: 患者信息管理
     patient_info: Dict[str, Any]
-    start_diagnosis:bool
+    start_diagnosis: bool
+    summary_with_dialogue: str

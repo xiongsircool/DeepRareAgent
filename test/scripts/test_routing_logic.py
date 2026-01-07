@@ -16,7 +16,7 @@ def test_routing():
     # 获取所有边
     edges = graph_obj.edges
 
-    print(f"\n📊 Graph 结构:")
+    print(f"\n[INFO] Graph 结构:")
     print(f"   节点: {list(graph_obj.nodes.keys())}")
 
     # 检查 prediagnosis 节点的条件边
@@ -37,7 +37,7 @@ def test_routing():
     # 测试路由函数
     from DeepRareAgent.graph import route_after_prediagnosis
 
-    print(f"\n🧪 测试路由函数:")
+    print(f"\n[TEST] 测试路由函数:")
 
     # 测试 1: start_diagnosis=False
     state_false = {"start_diagnosis": False}
@@ -45,9 +45,9 @@ def test_routing():
     print(f"\n   测试 1: start_diagnosis=False")
     print(f"      返回: {result_false}")
     if result_false == "__end__":
-        print(f"      ✅ 正确：返回 __end__（结束对话）")
+        print(f"      [PASS] 正确：返回 __end__（结束对话）")
     else:
-        print(f"      ❌ 错误：应该返回 __end__，实际返回 {result_false}")
+        print(f"      [FAIL] 错误：应该返回 __end__，实际返回 {result_false}")
 
     # 测试 2: start_diagnosis=True
     state_true = {"start_diagnosis": True}
@@ -55,9 +55,9 @@ def test_routing():
     print(f"\n   测试 2: start_diagnosis=True")
     print(f"      返回: {result_true}")
     if result_true == "mdt_diagnosis":
-        print(f"      ✅ 正确：返回 mdt_diagnosis（进入会诊）")
+        print(f"      [PASS] 正确：返回 mdt_diagnosis（进入会诊）")
     else:
-        print(f"      ❌ 错误：应该返回 mdt_diagnosis，实际返回 {result_true}")
+        print(f"      [FAIL] 错误：应该返回 mdt_diagnosis，实际返回 {result_true}")
 
     # 测试 3: start_diagnosis 不存在（默认 False）
     state_none = {}
@@ -65,9 +65,9 @@ def test_routing():
     print(f"\n   测试 3: start_diagnosis 不存在")
     print(f"      返回: {result_none}")
     if result_none == "__end__":
-        print(f"      ✅ 正确：返回 __end__（默认结束对话）")
+        print(f"      [PASS] 正确：返回 __end__（默认结束对话）")
     else:
-        print(f"      ❌ 错误：应该返回 __end__，实际返回 {result_none}")
+        print(f"      [FAIL] 错误：应该返回 __end__，实际返回 {result_none}")
 
     # 检查是否所有测试通过
     all_passed = (
@@ -92,8 +92,8 @@ def main():
     print("=" * 60)
 
     if success:
-        print("✅ 所有路由测试通过")
-        print("\n✅ 正确行为：")
+        print("[PASS] 所有路由测试通过")
+        print("\n[PASS] 正确行为：")
         print("   - start_diagnosis=False → 结束对话，等待用户下次输入")
         print("   - start_diagnosis=True → 进入 MDT 会诊")
         print("\n💡 对话流程：")
@@ -103,7 +103,7 @@ def main():
         print("   4. 用户看到回复，可以继续输入")
         print("   5. 下次调用：messages = [历史对话] + [新的用户输入]")
     else:
-        print("❌ 路由测试失败")
+        print("[FAIL] 路由测试失败")
 
     print("=" * 60 + "\n")
 

@@ -27,7 +27,7 @@ def parse_and_display_messages(state: Dict[str, Any]) -> str:
     
     formatted_output = []
     formatted_output.append("=" * 60)
-    formatted_output.append(f"📋 对话历史 (共 {len(messages)} 条消息)")
+    formatted_output.append(f"[对话历史] (共 {len(messages)} 条消息)")
     formatted_output.append("=" * 60)
     
     for index, message in enumerate(messages, 1):
@@ -39,12 +39,12 @@ def parse_and_display_messages(state: Dict[str, Any]) -> str:
                 item["text"] for item in message.content if isinstance(item, Dict) and "text" in item
             )
         
-        # 为不同类型的消息添加符号
-        icon = "👤" if message_type == "HumanMessage" else "🤖"
-        icon = "⚙️" if message_type == "SystemMessage" else icon
-        icon = "🔧" if message_type == "ToolMessage" else icon
+        # 为不同类型的消息添加标识符
+        prefix = "[USER]" if message_type == "HumanMessage" else "[AI]"
+        prefix = "[SYSTEM]" if message_type == "SystemMessage" else prefix
+        prefix = "[TOOL]" if message_type == "ToolMessage" else prefix
         
-        formatted_output.append(f"\n{icon} 消息 #{index} [{message_type}]")
+        formatted_output.append(f"\n{prefix} 消息 #{index} [{message_type}]")
         formatted_output.append("-" * 40)
         
         if isinstance(content, str):

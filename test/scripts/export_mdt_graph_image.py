@@ -48,13 +48,13 @@ def export_graph_image():
 
         print(f"✓ 图像已保存: {output_path}")
         print("\n" + "=" * 60)
-        print("✅ 导出成功！")
+        print("[PASS] 导出成功！")
         print("=" * 60)
 
         return str(output_path)
     else:
         print("\n" + "=" * 60)
-        print("⚠️  PNG 导出失败，但你可以：")
+        print("[WARN]  PNG 导出失败，但你可以：")
         print("  1. 使用 LangGraph Studio 可视化")
         print("  2. 查看上面的 ASCII 图")
         print("  3. 手动绘制流程图")

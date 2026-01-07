@@ -84,7 +84,7 @@ multi_expert_diagnosis_agent:
           # max_tokens: 8000
         system_prompt_path: "DeepRareAgent/prompts/02deepagent_sub_prompt.txt"
         excoulde_tools: []
-        additional_tools: ["save_evidences","extract_evidences","search_wikipedia_tool","search_pubmed","lit_sense_search_tool"]
+        additional_tools: ["save_evidences","extract_evidences","search_wikipedia_tool","search_pubmed","lit_sense_search"]
 
   # Expert Group 2
   group_2:
@@ -127,14 +127,15 @@ multi_expert_diagnosis_agent:
           # max_tokens: 8000
         system_prompt_path: "DeepRareAgent/prompts/02deepagent_sub_prompt.txt"
         excoulde_tools: []
-        additional_tools: ["save_evidences","extract_evidences","search_wikipedia_tool","search_pubmed","lit_sense_search_tool"]
+        additional_tools: ["save_evidences","extract_evidences","search_wikipedia_tool","search_pubmed","lit_sense_search"]
 
 
 # ============================================================
 # Configuration for MDT System
 # ============================================================
 mdt_config:
-  max_rounds: 5  # MDT 多专家会诊的最大轮数
+  max_rounds: 3  # MDT 多专家会诊的最大轮数
+  reviewer_prompt_path: "DeepRareAgent/prompts/02deepagent_reviwer_prompt.txt"
 
 
 # ============================================================
@@ -147,5 +148,5 @@ summary_agent:
   api_key: "YOUR_SILICONFLOW_API_KEY_HERE"  # 替换为你的API密钥
   temperature: 0.1  # 较低的温度，确保汇总的一致性和准确性
   model_kwargs:
-    max_tokens: 8000  # 较大的输出长度，用于生成完整的综合报告
+    # max_tokens: 8000  # 较大的输出长度，用于生成完整的综合报告
   system_prompt_path: "DeepRareAgent/prompts/03summary_prompt.txt"

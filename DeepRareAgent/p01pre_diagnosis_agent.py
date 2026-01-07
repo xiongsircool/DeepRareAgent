@@ -121,19 +121,9 @@ def create_pre_diagnosis_node(
         2. trigger_deep_diagnosis 工具会通过 Command 自动更新 start_diagnosis
         3. 直接返回 agent 的结果
         """
-        print("\n" + "="*60)
-        print(f"[PreDiagnosis] 当前 messages 数量: {len(state.get('messages', []))}")
-        print(f"[PreDiagnosis] start_diagnosis: {state.get('start_diagnosis', False)}")
-        print("="*60)
-
         # 调用 agent
+        state = state.copy()
         result = await internal_agent.ainvoke(state)
-        print(result)
-        print("\n" + "="*60)
-        print("[PreDiagnosis] Agent 返回:")
-        print(f"  - messages 数量: {len(result.get('messages', []))}")
-        print(f"  - start_diagnosis: {result.get('start_diagnosis', state.get('start_diagnosis', False))}")
-        print("="*60)
 
         # 提取最后一条 AI 回复消息（过滤掉工具调用等中间消息）
         messages = result.get('messages', [])
@@ -146,40 +136,22 @@ def create_pre_diagnosis_node(
                 break
 
         # 检测是否触发了深度诊断，如果是则添加系统提示
-        summary_with_dialogue = ''
+        # 注意：对话总结的生成已移到主图的 prepare_for_mdt_node 中
+        # 这里只负责检测触发并添加UI提示
         if result.get('start_diagnosis', False) and not state.get('start_diagnosis', False):
-            print("\n🚀 触发深度诊断！")
+            print("\n🚀 [PreDiag] 检测到深度诊断触发（状态由工具通过Command更新）")
             if final_ai_message:
                 content = final_ai_message.content
                 final_ai_message = AIMessage(content= (content+'\n\n<span style="color:red">**系统提示：检测到满足深度研究条件，正在为您跳转专家诊断模式...**</span>'))
-            
-            # 生成 summary_with_dialogue：调用 model 总结之前的对话
-            dialogue_text = "\n".join([
-                f"{'患者' if isinstance(m, HumanMessage) else '医生'}: {m.content}" 
-                for m in state.get('messages', [])
-                if hasattr(m, 'content') and m.content
-            ])
-            
-            summary_prompt = f"""请将以下医患对话总结为简洁的患者病情摘要，包括主诉、症状、病史等关键信息，供后续深度诊断参考：
-
-{dialogue_text}
-
-请用结构化的形式输出摘要（不超过500字）："""
-            
-            try:
-                summary_response = await model.ainvoke([SystemMessage(content=summary_prompt)])
-                summary_with_dialogue = summary_response.content
-                print(f"\n📝 对话摘要生成完成:\n{summary_with_dialogue[:200]}...")
-            except Exception as e:
-                print(f"\n⚠️ 生成对话摘要失败: {e}")
-                summary_with_dialogue = dialogue_text  # 降级：直接使用原始对话文本
         
         # 只返回最后一条 AI 消息 + 其他状态更新
         # add_messages 会自动将这条消息追加到主图的 messages 列表
+        # 注意：patient_info 已经通过工具的 Command 更新，这里不再重复返回
         return {
             'messages': [final_ai_message] if final_ai_message else [],
             'patient_info': result.get('patient_info', state.get('patient_info', {})),
-            'summary_with_dialogue': summary_with_dialogue,
+            # summary_with_dialogue 在主图的 prepare_mdt 节点中生成，这里保持原值
+            'summary_with_dialogue': state.get('summary_with_dialogue', ''),
             'start_diagnosis': result.get('start_diagnosis', state.get('start_diagnosis', False))
         }
 
@@ -225,7 +197,7 @@ if __name__ == "__main__":
                     start_diagnosis_triggered = True
             except Exception as e:
                 if "start_diagnosis" in str(e) and "True" in str(e):
-                    print(f"⚠️ 捕获到工具调用异常 (符合预期 if 这是在第二轮, 但在第一轮意味着失败): {e}")
+                    print(f"[WARN] 捕获到工具调用异常 (符合预期 if 这是在第二轮, 但在第一轮意味着失败): {e}")
                     start_diagnosis_triggered = True
                 else:
                     raise e
@@ -238,10 +210,10 @@ if __name__ == "__main__":
             print("-"*30)
             
             if start_diagnosis_triggered:
-                print("❌ 失败：在第一轮就触发了深度诊断，未进行确认。")
+                print("[FAIL] 失败：在第一轮就触发了深度诊断，未进行确认。")
                 return
 
-            print("✅ 第一轮未触发，正在模拟确认...")
+            print("[PASS] 第一轮未触发，正在模拟确认...")
 
             # 如果第一轮没有触发（符合预期），我们模拟用户确认
             print("\n>>> [测试场景] 用户回复 '是的，开始深度诊断' ...")
@@ -269,10 +241,10 @@ if __name__ == "__main__":
             except Exception as e:
                 # Catch the Command bubble update
                 if "start_diagnosis" in str(e):
-                     print(f"✅ 捕获到工具调用 (符合预期): {e}")
+                     print(f"[PASS] 捕获到工具调用 (符合预期): {e}")
                      start_diagnosis_triggered_2 = True
                 else:
-                     print(f"❌ 捕获到意外异常: {e}")
+                     print(f"[FAIL] 捕获到意外异常: {e}")
 
             
             print("\n" + "-"*30)
@@ -283,12 +255,12 @@ if __name__ == "__main__":
             print("-"*30)
             
             if start_diagnosis_triggered_2:
-                 print("✅ 测试通过：在确认后触发了深度诊断。")
+                 print("[PASS] 测试通过：在确认后触发了深度诊断。")
             else:
-                 print("❌ 测试失败：确认后仍未触发。")
+                 print("[FAIL] 测试失败：确认后仍未触发。")
 
         except Exception as e:
-            print(f"❌ 测试运行时挂了: {e}")
+            print(f"[FAIL] 测试运行时挂了: {e}")
             import traceback
             traceback.print_exc()
 

@@ -35,25 +35,103 @@ def init_patient_info() -> Dict[str, Any]:
     }
 
 
-# --- 4. 路由逻辑 ---
+# --- 4. 准备MDT的中间节点 ---
+async def prepare_for_mdt_node(state: MainGraphState):
+    """
+    在进入MDT之前的准备节点：生成对话总结
+    
+    这个节点解决了一个关键问题：
+    trigger_deep_diagnosis 工具通过 Command.PARENT 直接更新主图状态，
+    导致预诊断节点的 result 中无法捕获 start_diagnosis 的变化。
+    因此我们在主图的路由阶段生成对话总结。
+    """
+    from langchain_openai import ChatOpenAI
+    from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+    
+    # 检查是否已有对话总结
+    existing_summary = state.get('summary_with_dialogue', '')
+    if existing_summary:
+        print(f"\n[LIST] 已存在对话总结，无需重新生成（{len(existing_summary)} 字符）")
+        return {}
+    
+    # 提取对话历史
+    messages = state.get('messages', [])
+    if not messages:
+        print("\n[WARN] 没有对话历史，跳过总结生成")
+        return {}
+    
+    print("\n[NOTE] [Prepare MDT] 正在生成对话总结...")
+    
+    # 格式化对话历史
+    dialogue_text = "\n".join([
+        f"{'患者' if isinstance(m, HumanMessage) else '医生'}: {m.content}" 
+        for m in messages
+        if hasattr(m, 'content') and m.content and isinstance(m, (HumanMessage, AIMessage))
+    ])
+    
+    print(f"  - 对话历史长度: {len(dialogue_text)} 字符")
+    print(f"  - 消息数量: {len([m for m in messages if hasattr(m, 'content') and m.content])}")
+    
+    # 使用配置中的模型生成总结
+    # 注意：使用 pre_diagnosis_agent 的配置，因为这是对预诊断对话的总结
+    # 可以考虑未来添加专门的配置项，如 summary_agent 或 prepare_mdt_agent
+    try:
+        from DeepRareAgent.utils.model_factory import create_llm_from_config
+        
+        # 使用预诊断配置创建模型（轻量级任务，使用相同配置合理）
+        model = create_llm_from_config(settings.pre_diagnosis_agent)
+        
+        print(f"  - 使用模型: {settings.pre_diagnosis_agent.model_name}")
+        print(f"  - Provider: {getattr(settings.pre_diagnosis_agent, 'provider', 'openai')}")
+        
+        summary_prompt = f"""请将以下医患对话总结为简洁的患者病情摘要，包括主诉、症状、病史等关键信息，供后续深度诊断参考：
+
+{dialogue_text}
+
+请用结构化的形式输出摘要（不超过500字）："""
+        
+        summary_response = await model.ainvoke([SystemMessage(content=summary_prompt)])
+        summary_with_dialogue = summary_response.content
+        
+        print(f"\n[PASS] 对话摘要生成完成（{len(summary_with_dialogue)} 字符）:")
+        print("-" * 80)
+        print(summary_with_dialogue[:300] + "..." if len(summary_with_dialogue) > 300 else summary_with_dialogue)
+        print("-" * 80)
+        
+        return {
+            'summary_with_dialogue': summary_with_dialogue,
+            'messages': [AIMessage(content="正在生成对话总结并准备专家会诊...")]
+        }
+        
+    except Exception as e:
+        print(f"\n[WARN] 生成对话摘要失败: {e}")
+        print("  - 使用降级方案：直接使用原始对话文本")
+        return {
+            'summary_with_dialogue': dialogue_text,
+            'messages': [AIMessage(content="[WARN] 对话总结生成失败，使用原始对话记录")]
+        }
+
+
+# --- 5. 路由逻辑 ---
 def route_after_prediagnosis(state: MainGraphState) -> str:
     """
     预诊断后的路由判断：
-    - 如果 start_diagnosis=True，进入 MDT 会诊
+    - 如果 start_diagnosis=True，进入准备MDT节点
     - 否则结束对话，等待用户下次输入
     """
     if state.get("start_diagnosis", False):
-        return "mdt_diagnosis"
+        return "prepare_mdt"
     return "__end__"
 
 
-# --- 5. 构建主图 ---
+
+# --- 6. 构建主图 ---
 def create_main_graph():
     """
     创建罕见病诊断系统主图
 
     流程：
-    START → 预诊断 → (判断) → MDT 会诊 → 汇总报告 → END
+    START → 预诊断 → (判断) → 准备MDT → MDT 会诊 → 汇总报告 → END
                        ↓
                       END (未开始诊断时结束，等待用户继续输入)
     """
@@ -63,14 +141,17 @@ def create_main_graph():
     prediagnosis_node = create_pre_diagnosis_node(settings=settings)
     workflow.add_node("prediagnosis", prediagnosis_node)
 
-    # 2. 添加 MDT 多专家会诊子图（作为一个节点）
+    # 2. 添加准备MDT节点（生成对话总结）
+    workflow.add_node("prepare_mdt", prepare_for_mdt_node)
+
+    # 3. 添加 MDT 多专家会诊子图（作为一个节点）
     mdt_graph = create_mdt_graph()
     workflow.add_node("mdt_diagnosis", mdt_graph)
 
-    # 3. 添加汇总节点
+    # 4. 添加汇总节点
     workflow.add_node("summary", summary_node)
 
-    # 4. 连接边
+    # 5. 连接边
     # START → 预诊断
     workflow.add_edge(START, "prediagnosis")
 
@@ -79,10 +160,13 @@ def create_main_graph():
         "prediagnosis",
         route_after_prediagnosis,
         {
-            "mdt_diagnosis": "mdt_diagnosis",
+            "prepare_mdt": "prepare_mdt",  # 先准备MDT（生成总结）
             "__end__": END  # 结束对话，等待用户下次输入
         }
     )
+
+    # 准备MDT → MDT 会诊
+    workflow.add_edge("prepare_mdt", "mdt_diagnosis")
 
     # MDT 会诊 → 汇总报告
     workflow.add_edge("mdt_diagnosis", "summary")

@@ -105,12 +105,12 @@ async def test_multi_round():
     ai_count = sum(1 for m in all_messages if isinstance(m, AIMessage))
     system_count = sum(1 for m in all_messages if isinstance(m, SystemMessage))
 
-    print(f"\n📊 最终 messages 统计:")
+    print(f"\n[INFO] 最终 messages 统计:")
     print(f"   HumanMessage: {human_count}")
     print(f"   AIMessage: {ai_count}")
     print(f"   SystemMessage: {system_count}")
 
-    print(f"\n✅ 预期结果:")
+    print(f"\n[PASS] 预期结果:")
     print(f"   HumanMessage: 3 (3轮用户输入)")
     print(f"   AIMessage: 3 (3轮AI回复)")
     print(f"   SystemMessage: 0 (不应该保存到对话历史)")
@@ -123,9 +123,9 @@ async def test_multi_round():
     )
 
     if success:
-        print(f"\n🎉 测试通过！SystemMessage 没有泄漏到对话历史中")
+        print(f"\n[SUCCESS] 测试通过！SystemMessage 没有泄漏到对话历史中")
     else:
-        print(f"\n⚠️ 测试失败！对话历史中出现了意外的消息")
+        print(f"\n[WARN] 测试失败！对话历史中出现了意外的消息")
         print(f"\n   详细消息类型:")
         for i, msg in enumerate(all_messages, 1):
             print(f"   {i}. {type(msg).__name__}: {msg.content[:50]}...")
@@ -143,10 +143,10 @@ def main():
 
     print("\n" + "=" * 60)
     if success:
-        print("✅ 多轮对话测试通过")
-        print("✅ PatientContextPlugin 修复成功")
+        print("[PASS] 多轮对话测试通过")
+        print("[PASS] PatientContextPlugin 修复成功")
     else:
-        print("❌ 多轮对话测试失败")
+        print("[FAIL] 多轮对话测试失败")
     print("=" * 60 + "\n")
 
     return success

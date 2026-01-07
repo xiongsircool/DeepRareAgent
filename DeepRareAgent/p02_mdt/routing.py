@@ -28,24 +28,24 @@ def should_continue_diagnosis(state: MDTGraphState) -> Literal["continue", "end"
 
     # 打印当前状态
     print("\n" + "=" * 60)
-    print("📊 MDT 路由判断")
+    print("MDT 路由判断")
     print("=" * 60)
     print(f"当前轮数: {round_count}/{max_rounds}")
     print(f"共识状态: {consensus_reached}")
 
     # 判断结束条件
     if consensus_reached:
-        print("✅ 所有专家达成共识，结束诊断流程")
+        print("所有专家达成共识，结束诊断流程")
         print("=" * 60 + "\n")
         return "end"
 
     if round_count >= max_rounds:
-        print("⚠️ 已达到最大轮数限制，结束诊断流程")
+        print("已达到最大轮数限制，结束诊断流程")
         print("=" * 60 + "\n")
         return "end"
 
     # 继续诊断
-    print(f"🔄 未达成共识，进入第 {round_count + 1} 轮诊断")
+    print(f"未达成共识，进入第 {round_count + 1} 轮诊断")
     print("=" * 60 + "\n")
     return "continue"
 
@@ -72,7 +72,7 @@ def get_active_experts(state: MDTGraphState) -> list[str]:
         and not expert.get("has_error", False)     # 无错误
     ]
 
-    print(f"🔍 活跃专家组: {active_experts}")
+    print(f"[SEARCH] 活跃专家组: {active_experts}")
     return active_experts
 
 
@@ -157,5 +157,5 @@ if __name__ == "__main__":
     assert active == ["group_1"], "只有 group_1 应该继续诊断"
 
     print("\n" + "=" * 60)
-    print("✅ 所有测试通过！")
+    print("[PASS] 所有测试通过！")
     print("=" * 60)

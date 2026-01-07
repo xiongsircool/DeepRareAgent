@@ -85,7 +85,7 @@ def test_config_structure():
     print(f"  Group 1 main agent keys: {list(group1_dict.keys())[:5]}...")
 
     print("\n" + "=" * 60)
-    print("✅ 配置加载器成功支持所有复杂嵌套结构！")
+    print("[PASS] 配置加载器成功支持所有复杂嵌套结构！")
     print("=" * 60)
 
     # 5. 统计配置复杂度
@@ -101,6 +101,6 @@ if __name__ == "__main__":
     try:
         test_config_structure()
     except Exception as e:
-        print(f"\n❌ 配置加载失败: {e}")
+        print(f"\n[FAIL] 配置加载失败: {e}")
         import traceback
         traceback.print_exc()

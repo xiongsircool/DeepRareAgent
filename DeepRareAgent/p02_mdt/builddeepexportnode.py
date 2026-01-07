@@ -113,6 +113,8 @@ def create_deep_export_node(
     # 构建
     class Context(AgentState):
         evidences: Annotated[list[str], operator.add]
+
+
     class ContextMiddleware(AgentMiddleware):
         """扩展 State 的 Middleware"""
         state_schema = Context
@@ -262,7 +264,7 @@ def create_deep_export_node(
             })
 
             # 添加错误消息到主图，让用户知道出错了
-            error_message = f"⚠️ 专家组 {group_id} 执行出错"
+            error_message = f"[WARN] 专家组 {group_id} 执行出错"
             # 如果错误信息不太长，也显示给用户
             if len(str(e)) < 100:
                 error_message += f": {str(e)}"

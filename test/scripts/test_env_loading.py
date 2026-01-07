@@ -18,10 +18,10 @@ def test_env_file():
     env_file = project_root / ".env"
 
     print(f"\n📁 .env 文件路径: {env_file}")
-    print(f"✅ .env 文件存在: {env_file.exists()}")
+    print(f"[PASS] .env 文件存在: {env_file.exists()}")
 
     if not env_file.exists():
-        print("❌ .env 文件不存在")
+        print("[FAIL] .env 文件不存在")
         return False
 
     # 读取 .env 文件内容（不加载到环境变量）
@@ -47,11 +47,11 @@ def test_env_file():
 
     print(f"\n🔑 LANGSMITH_API_KEY 检查:")
     if langsmith_key:
-        print(f"   ✅ 已设置: {langsmith_key[:20]}...")
-        print(f"   ✅ 长度: {len(langsmith_key)} 字符")
+        print(f"   [PASS] 已设置: {langsmith_key[:20]}...")
+        print(f"   [PASS] 长度: {len(langsmith_key)} 字符")
         return True
     else:
-        print(f"   ❌ 未设置")
+        print(f"   [FAIL] 未设置")
         return False
 
 
@@ -72,13 +72,13 @@ def test_langgraph_json():
     print(f"\n📄 langgraph.json env 配置: {env_file}")
 
     if env_file == '.env':
-        print(f"   ✅ 正确指向 .env 文件")
+        print(f"   [PASS] 正确指向 .env 文件")
         return True
     elif env_file == '.env.example':
-        print(f"   ⚠️ 指向 .env.example（应该改为 .env）")
+        print(f"   [WARN] 指向 .env.example（应该改为 .env）")
         return False
     else:
-        print(f"   ❌ 配置异常: {env_file}")
+        print(f"   [FAIL] 配置异常: {env_file}")
         return False
 
 
@@ -102,18 +102,18 @@ def main():
     print("=" * 60)
 
     for test_name, passed in results:
-        status = "✅ 通过" if passed else "❌ 失败"
+        status = "[PASS] 通过" if passed else "[FAIL] 失败"
         print(f"{status} - {test_name}")
 
     all_passed = all(r[1] for r in results)
 
     print("\n" + "=" * 60)
     if all_passed:
-        print("🎉 环境变量配置正确！")
-        print("✅ LANGSMITH_API_KEY 可以正常加载")
-        print("✅ 可以运行 uv run langgraph dev")
+        print("[SUCCESS] 环境变量配置正确！")
+        print("[PASS] LANGSMITH_API_KEY 可以正常加载")
+        print("[PASS] 可以运行 uv run langgraph dev")
     else:
-        print("⚠️ 环境变量配置有问题，请检查")
+        print("[WARN] 环境变量配置有问题，请检查")
     print("=" * 60 + "\n")
 
     return all_passed

@@ -48,7 +48,11 @@ STRICT CITATION: Use <ref>id</ref> tags matching the IDs from 'extract_evidences
 Example: "The patient's proteinuria<ref>2</ref> combined with family history of renal failure<ref>5</ref>..."
 
 [Section 3: Differential Diagnosis Matrix]
-Rank potential diagnoses. For each, provide [Core Evidence Support] (with <ref>id</ref>), [Clinical Fit], and [Residual Uncertainty].
+Rank potential diagnoses. For each, provide:
+- [Core Evidence Support] (with <ref>id</ref>)
+- [Arguments Against] (Evidence that effectively contradicts or weakens this diagnosis)
+- [Clinical Fit]
+- [Residual Uncertainty] (What is still unknown?)
 
 [Section 4: MDT Peer-Review Hooks]
 Propose 2-3 specific technical points for expert discussion.
