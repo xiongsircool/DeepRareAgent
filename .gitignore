@@ -180,7 +180,7 @@ images/深度诊断单个诊断组的工作示例图.webp
 test_output/
 test_results/
 coverage_html/
-
+.spec-workflow
 # Claude Code specific
 .claude
 
@@ -222,3 +222,4 @@ Desktop.ini
 # Notebook outputs (keep notebooks but clean outputs)
 # *.ipynb
 # !notebooks/*.ipynb
+*.dump

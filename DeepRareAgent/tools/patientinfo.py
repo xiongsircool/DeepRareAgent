@@ -68,6 +68,7 @@ def set_base_info(
             "exams": [],
             "medications": [],
             "family_history": [],
+            "past_medical_history": [],
             "others": []
         }
 
@@ -79,7 +80,7 @@ def set_base_info(
         new_state["patient_info"]["base_info"] = {}
 
     # 确保其他字段也存在
-    for field in ["symptoms", "vitals", "exams", "medications", "family_history", "others"]:
+    for field in ["symptoms", "vitals", "exams", "medications", "family_history", "past_medical_history", "others"]:
         if field not in new_state["patient_info"]:
             new_state["patient_info"][field] = []
 
@@ -273,6 +274,7 @@ def patient_info_to_text(
         "exams", 
         "medications", 
         "family_history", 
+        "past_medical_history",
         "others"
     ]
     
@@ -373,7 +375,7 @@ def test_upsert_patient_facts(state: Dict[str, Any], payload: Dict[str, List[Dic
         new_state["patient_info"] = {}
 
     # 确保所有字段存在
-    for field in ["base_info", "symptoms", "vitals", "exams", "medications", "family_history", "others"]:
+    for field in ["base_info", "symptoms", "vitals", "exams", "medications", "family_history", "past_medical_history", "others"]:
         if field not in new_state["patient_info"]:
             if field == "base_info":
                 new_state["patient_info"][field] = {}
@@ -457,6 +459,7 @@ if __name__ == "__main__":
             "exams": [],
             "medications": [],
             "family_history": [],
+            "past_medical_history": [],
             "others": []
         }
     }

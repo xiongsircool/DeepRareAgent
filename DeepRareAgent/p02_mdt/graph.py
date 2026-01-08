@@ -9,7 +9,7 @@ from DeepRareAgent.p02_mdt.nodes import (
     fan_out_node,
     should_continue_or_end
 )
-from DeepRareAgent.p02_mdt.export_reviwer_node import expert_reviwer_node
+from DeepRareAgent.p02_mdt.export_reviewer_node import expert_reviewer_node
 from DeepRareAgent.config import settings
 from DeepRareAgent.p02_mdt.builddeepexportnode import create_deep_export_node
 
@@ -27,13 +27,13 @@ def create_mdt_graph():
     for group_id in group_configs.keys():
         # 注意：节点名直接使用 group_id (如 "group_1")，因为：
         # 1. builddeepexportnode 中通过 config.metadata.langgraph_node 获取 group_id
-        # 2. export_reviwer_node 中通过 group_id 获取配置
+        # 2. export_reviewer_node 中通过 group_id 获取配置
         expert_config = getattr(settings.multi_expert_diagnosis_agent, group_id)
         graph.add_node(group_id, create_deep_export_node(expert_config))
         expert_nodes.append(group_id)
 
     # 3. 添加专家互审节点
-    graph.add_node("expert_review", expert_reviwer_node)
+    graph.add_node("expert_review", expert_reviewer_node)
 
     # 4. 添加路由判断节点
     graph.add_node("routing_decision", routing_decision_node)

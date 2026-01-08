@@ -31,6 +31,7 @@ def init_patient_info() -> Dict[str, Any]:
         "exams": [],
         "medications": [],
         "family_history": [],
+        "past_medical_history": [],
         "others": []
     }
 
@@ -62,16 +63,6 @@ async def prepare_for_mdt_node(state: MainGraphState):
     
     print("\n[NOTE] [Prepare MDT] 正在生成对话总结...")
     
-    # 格式化对话历史
-    dialogue_text = "\n".join([
-        f"{'患者' if isinstance(m, HumanMessage) else '医生'}: {m.content}" 
-        for m in messages
-        if hasattr(m, 'content') and m.content and isinstance(m, (HumanMessage, AIMessage))
-    ])
-    
-    print(f"  - 对话历史长度: {len(dialogue_text)} 字符")
-    print(f"  - 消息数量: {len([m for m in messages if hasattr(m, 'content') and m.content])}")
-    
     # 使用配置中的模型生成总结
     # 注意：使用 pre_diagnosis_agent 的配置，因为这是对预诊断对话的总结
     # 可以考虑未来添加专门的配置项，如 summary_agent 或 prepare_mdt_agent
@@ -84,13 +75,16 @@ async def prepare_for_mdt_node(state: MainGraphState):
         print(f"  - 使用模型: {settings.pre_diagnosis_agent.model_name}")
         print(f"  - Provider: {getattr(settings.pre_diagnosis_agent, 'provider', 'openai')}")
         
-        summary_prompt = f"""请将以下医患对话总结为简洁的患者病情摘要，包括主诉、症状、病史等关键信息，供后续深度诊断参考：
-
-{dialogue_text}
+        # 修改为“上述”对话，因为我们将把提示词append到对话列表最后
+        summary_prompt = """请将上述医患对话总结为简洁的患者病情摘要，包括主诉、症状、病史等关键信息，供后续深度诊断参考。
 
 请用结构化的形式输出摘要（不超过500字）："""
         
-        summary_response = await model.ainvoke([SystemMessage(content=summary_prompt)])
+        # 这里的修改：不再手动拼接字符串，而是直接使用 messages 列表
+        # 这样可以保留多模态信息（如图片），避免 str(content) 造成的格式错误
+        input_messages = messages + [SystemMessage(content=summary_prompt)]
+        
+        summary_response = await model.ainvoke(input_messages)
         summary_with_dialogue = summary_response.content
         
         print(f"\n[PASS] 对话摘要生成完成（{len(summary_with_dialogue)} 字符）:")
@@ -105,9 +99,20 @@ async def prepare_for_mdt_node(state: MainGraphState):
         
     except Exception as e:
         print(f"\n[WARN] 生成对话摘要失败: {e}")
-        print("  - 使用降级方案：直接使用原始对话文本")
+        print("  - 使用降级方案：尝试提取文本内容作为摘要")
+        
+        try:
+             # 简单的文本回退逻辑
+             fallback_text = "\n".join([
+                f"{'患者' if isinstance(m, HumanMessage) else '医生'}: {m.content if isinstance(m.content, str) else '[Multimodal Content]'}" 
+                for m in messages
+                if isinstance(m, (HumanMessage, AIMessage))
+            ])
+        except:
+            fallback_text = "无法提取对话历史"
+
         return {
-            'summary_with_dialogue': dialogue_text,
+            'summary_with_dialogue': fallback_text,
             'messages': [AIMessage(content="[WARN] 对话总结生成失败，使用原始对话记录")]
         }
 
@@ -226,6 +231,6 @@ if __name__ == "__main__":
         print("    - 或使用交互式预诊断收集患者信息")
 
         # 你可以在这里运行 graph.ainvoke(initial_state)
-        # result = await graph.ainvoke(initial_state)
+        result = await graph.ainvoke(initial_state)
 
     asyncio.run(run_test())

@@ -47,6 +47,12 @@ DO NOT rush to diagnosis. DO NOT ask "是否开始深度诊断" until you have c
   User: "3天了，跳痛" → You: Update symptom, ask "疼痛程度1-10分大概多少？有没有伴随其他症状比如恶心、呕吐或者视力问题？"
   ...continue until complete...
 
+2.1 Multimodal Data Processing
+If the interaction involves multimodal inputs (images, PDFs, uploaded files) containing medical records or visual symptoms:
+- **Transcription to Record**: You must actively extract relevant clinical details (lab values, gene reports, imaging findings, visual symptoms) from these sources.
+- **Integration**: Convert this extracted information into structured data immediately using `upsert_patient_facts` (e.g., putting lab results into `exams`, visual phenotypes into `symptoms`).
+- **Verification**: If the file content is complex, summarize what you have extracted and ask the user to confirm the key details.
+
 3. Rare Disease Screening & Diagnosis Gating Protocol
 The field start_diagnosis is a high-stakes trigger reserved for RARE or COMPLEX disease investigation.
 You must NOT call the trigger_deep_diagnosis tool unless:

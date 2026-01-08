@@ -16,6 +16,54 @@
 
 ![系统架构](images/multi_team_mdt_arch.png)
 
+
+> ⚠️ **运行注意事项**: 通常项目无法正常运行是由于所选模型能力不足导致的。例如：若预诊断模型（Pre-Diagnosis Agent）不支持图像识别（Vision），将会导致多模态图像输入功能报错。请务必在 `config.yml` 中为相关 Agent 配置支持对应能力（如 GPT-4o, Claude-3.5-Sonnet, Qwen-VL 等）的模型。
+---
+
+## 系统图谱架构 (System Graph Schema)
+
+本系统基于 **LangGraph** 构建，采用状态机（State Graph）模式管理诊断流程。整体流转逻辑如下：
+
+```mermaid
+graph TD
+    %% 节点定义
+    START((Start))
+    prediagnosis[Pre-Diagnosis Agent<br/>(智能问诊)]
+    check_status{Start Diagnosis?}
+    prepare_mdt[Prepare MDT<br/>(生成病情摘要)]
+    mdt_diagnosis[[MDT Subgraph<br/>(多专家会诊子图)]]
+    summary[Summary Agent<br/>(生成综合报告)]
+    END((End))
+
+    %% 流程连接
+    START --> prediagnosis
+    prediagnosis --> check_status
+    
+    %% 条件路由
+    check_status -- No --> END
+    check_status -- Yes --> prepare_mdt
+    
+    %% 深度诊断流程
+    prepare_mdt --> mdt_diagnosis
+    mdt_diagnosis --> summary
+    summary --> END
+
+    %% 样式
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px;
+    classDef cluster fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef decision fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    class check_status decision;
+```
+
+**流程详解**：
+1.  **START -> Pre-Diagnosis**: 系统启动，进入预诊断节点，与患者进行交互式问诊（收集基本信息、症状、病史等）。
+2.  **Conditional Routing**:
+    *   **Wait (No)**: 如果信息不足或患者未确认开始诊断，流程暂停（`__end__`），等待用户下一轮输入（Human-in-the-loop）。
+    *   **Proceed (Yes)**: 当触发 `trigger_deep_diagnosis` 工具时，状态标记为 `start_diagnosis=True`，流程自动流转至下一步。
+3.  **Prepare MDT**: 对前期的医患对话进行语义总结，生成结构化的病情摘要（Context）。
+4.  **MDT Subgraph**: 进入多团队 Muti-Agent 会诊阶段（核心诊断逻辑）。
+5.  **Summary**: 整合 MDT 阶段的所有专家报告，生成最终诊断书。
+
 ---
 
 ## 核心特性
@@ -162,9 +210,9 @@ DeepRareAgent 的设计与验证参考了以下 2024-2025 年的顶刊与前沿�
 
 ---
 ## 后续任务
-- [ ] 支持定制总结报告
-- [ ] 知识图谱子智能体
-- [ ] 私有病例数据集支持智能体 
+- [ ] 支持定制总结报告(已经实现后端支持，前端还需要优化)
+- [ ] 知识图谱子智能体(初始化实现方案neo4jmcp+deepagents)
+- [ ] 私有病例数据集支持智能体 (考虑是FHIR还是直接采用sql数据库简单实现)
 - [ ] 患者信息升级多模态数据集管理
 - [ ] 个人变异文件支持智能体 
 
