@@ -70,7 +70,7 @@ async def triage_to_mdt_node(state: Dict[str, Any],config: RunnableConfig) -> MD
             "conflicts": [],
             "common_understandings": []
         },
-        "round_count": 1,
+        "round_count": 0,
         "max_rounds": max_rounds,  # 使用配置文件中的值
         "consensus_reached": False
     }
@@ -159,7 +159,7 @@ def should_continue_or_end(state: MDTGraphState) -> str:
 
     if consensus_reached:
         return "end"
-    if round_count >= max_rounds:
+    if round_count > max_rounds:
         return "end"
     return "continue"
 

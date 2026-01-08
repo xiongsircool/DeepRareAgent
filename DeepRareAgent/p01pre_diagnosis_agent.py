@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 # LangChain and Langgraph 基础组件
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
-from langchain_core.tools import tool
+from langchain_core.tools import tool, InjectedToolCallId
 from langgraph.runtime import Runtime
 from langgraph.types import Command
 from langgraph.prebuilt import InjectedState
@@ -35,7 +35,8 @@ from DeepRareAgent.config import settings as global_settings # 默认全局配�
 # ---------------------------------------------------------
 @tool
 def trigger_deep_diagnosis(
-    state: Annotated[Dict[str, Any], InjectedState]
+    state: Annotated[Dict[str, Any], InjectedState],
+    tool_call_id: Annotated[str, InjectedToolCallId]
 ) -> Command:
     """
     触发深度诊断开关。
@@ -50,10 +51,16 @@ def trigger_deep_diagnosis(
 
     调用此工具后，系统将自动进入深度诊断模式。
     """
+    from langchain_core.messages import ToolMessage
+    
+    # 更新当前 agent 的 state（不使用 graph=Command.PARENT）
+    # 这样 result.get('start_diagnosis') 可以正确获取到 True
+    # 然后由节点返回值统一更新到主图
     return Command(
-        update={"start_diagnosis": True},
-        # 返回工具执行结果消息
-        graph=Command.PARENT  # 更新父图状态
+        update={
+            "messages": [ToolMessage(content="已触发深度诊断模式", tool_call_id=tool_call_id)],
+            "start_diagnosis": True
+        }
     )
 
 # ---------------------------------------------------------

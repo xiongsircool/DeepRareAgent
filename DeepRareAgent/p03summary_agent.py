@@ -5,6 +5,7 @@
 整合多个专家组的诊断报告，生成符合临床规范的综合诊断报告。
 """
 
+import re
 from typing import Any, Dict
 from pathlib import Path
 
@@ -76,6 +77,57 @@ def _format_expert_reports(
     return "\n".join(formatted_reports)
 
 
+def _resolve_evidence_references(report_text: str, evidence_mapping: Dict[str, str]) -> str:
+    """
+    解析报告中的 <ref>group_id.index</ref> 标签，并将对应的证据内容追加到报告末尾。
+    
+    使用稳定的 group_id.index 格式，确保证据引用不会混淆。
+    
+    Args:
+        report_text: 汇总报告文本
+        evidence_mapping: 证据映射字典 {group_id.index: evidence_content}
+        
+    Returns:
+        追加了证据详情的报告文本
+    """
+    if not report_text or not evidence_mapping:
+        return report_text
+    
+    # 1. 查找所有唯一的引用键
+    # 匹配 <ref>group_id.number</ref> 格式
+    ref_pattern = re.compile(r'<ref>([a-zA-Z0-9_]+\.\d+)</ref>')
+    matches = ref_pattern.findall(report_text)
+    
+    if not matches:
+        return report_text
+    
+    # 去重并保持顺序
+    seen = set()
+    ref_keys = []
+    for match in matches:
+        if match not in seen:
+            seen.add(match)
+            ref_keys.append(match)
+    
+    # 2. 提取对应的证据
+    extracted_evidences = []
+    for ref_key in ref_keys:
+        if ref_key in evidence_mapping:
+            evidence_content = evidence_mapping[ref_key]
+            extracted_evidences.append(f"[{ref_key}] {evidence_content}")
+        else:
+            # 如果引用的键不存在，记录警告但不中断
+            print(f"[WARN] 未找到证据引用: {ref_key}")
+    
+    if not extracted_evidences:
+        return report_text
+    
+    # 3. 拼接到报告末尾
+    formatted_evidence_section = "\n\n#### 引用证据详情\n" + "\n".join(extracted_evidences)
+    
+    return report_text + formatted_evidence_section
+
+
 def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any]:
     """
     汇总节点：整合多位专家的诊断报告，生成最终综合诊断
@@ -109,19 +161,40 @@ def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any
     for group_id in reports.keys():
         print(f"   - {group_id}")
     
-    # 2. 格式化专家报告并收集所有证据
+    # 2. 格式化专家报告并构建稳定的证据映射
     print("\n[NOTE] 整合专家报告...")
     expert_pool = state.get("expert_pool", {})
     all_reports_text = _format_expert_reports(reports, expert_pool)
     
-    # 收集所有证据，形成统一的证据池供汇总报告使用
-    all_evidences = []
+    # 构建稳定的证据映射：为每个专家组的证据创建唯一标识
+    # 格式: {group_id}.{evidence_index} -> evidence_content
+    # 这样LLM可以明确引用特定专家的证据，避免混淆
+    evidence_mapping = {}
+    evidence_count = 0
+    
     for group_id in sorted(reports.keys()):  # 排序确保顺序一致
         expert_data = expert_pool.get(group_id, {})
         evidences = expert_data.get("evidences", [])
-        all_evidences.extend(evidences)
+        
+        for idx, evidence in enumerate(evidences, start=1):
+            # 创建稳定的引用键: group_id.index
+            ref_key = f"{group_id}.{idx}"
+            evidence_mapping[ref_key] = evidence
+            evidence_count += 1
     
-    print(f"📚 收集到 {len(all_evidences)} 条证据供汇总引用")
+    print(f"📚 构建证据映射: {evidence_count} 条证据来自 {len(reports)} 个专家组")
+    
+    # 生成证据引用指南，告知LLM如何正确引用
+    evidence_guide = ""
+    if evidence_mapping:
+        evidence_guide = "\n\n【证据引用指南】\n"
+        evidence_guide += "如需引用专家报告中的证据，请使用格式: <ref>专家组ID.证据编号</ref>\n"
+        evidence_guide += "可用的证据引用:\n"
+        for group_id in sorted(reports.keys()):
+            expert_data = expert_pool.get(group_id, {})
+            evidences = expert_data.get("evidences", [])
+            if evidences:
+                evidence_guide += f"  - {group_id}: 证据 1-{len(evidences)} (引用示例: <ref>{group_id}.1</ref>)\n"
     
     # 3. 加载系统提示词
     print("📖 加载系统提示词...")
@@ -149,7 +222,7 @@ def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any
 - 提供具体的检查和治疗建议
 - 包含实用的随访计划和注意事项
 - 使用患者和医生都能理解的专业语言
-- 可在关键诊断依据处使用 <ref>N</ref> 引用专家报告中的证据，增强可追溯性
+- 可在关键诊断依据处使用 <ref>专家组ID.证据编号</ref> 引用专家证据，增强可追溯性
 """
     
     user_prompt = f"""以下是患者的临床信息和多位专家的诊断分析，请为患者出具正式的罕见病诊断报告。
@@ -157,6 +230,7 @@ def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any
 {'【患者信息】' + chr(10) + patient_portrait + chr(10) if patient_portrait else ''}
 【专家诊断分析】
 {all_reports_text}
+{evidence_guide}
 {format_instruction}
 """
     
@@ -172,9 +246,9 @@ def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any
     response = llm.invoke(messages)
     final_report = response.content
     
-    # 处理汇总报告中的证据引用（如果LLM使用了 <ref> 标签）
-    if all_evidences:
-        final_report = process_expert_report_references(final_report, all_evidences)
+    # 处理汇总报告中的证据引用（使用稳定的group_id.index映射）
+    if evidence_mapping:
+        final_report = _resolve_evidence_references(final_report, evidence_mapping)
     
     print(f"\n[SUCCESS] 综合报告生成成功（{len(final_report)} 字符）")
     print("=" * 80 + "\n")

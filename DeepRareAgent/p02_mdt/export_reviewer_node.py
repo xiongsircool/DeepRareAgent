@@ -27,9 +27,8 @@ def build_reviewer_messages(state: MDTGraphState):
     for group_id, expert in export_pool.items():
         if expert.get("has_error", False) or expert.get("is_satisfied", False):
             continue
-        # Update blackboard if report not present or changed (though logic here updates if NOT present)
-        if group_id not in blackboard["published_reports"]:
-            blackboard["published_reports"][group_id] = expert["report"]
+        # Always update blackboard with latest report to keep it fresh across rounds
+        blackboard["published_reports"][group_id] = expert["report"]
     state["blackboard"] = blackboard
 
     # export_pool中messages 进行改造注入,自己以外的专家的report注入到自己messages中
@@ -119,6 +118,9 @@ async def expert_reviewer_node(state: MDTGraphState, config: RunnableConfig) -> 
     Optimized: 使用 asyncio.gather 并行处理所有专家的审核。
     """
 
+    # Increment round count at the START of review (before routing checks)
+    state["round_count"] += 1
+
     # 1. 基于export_pool 更新黑板并构建消息
     state, need_update_expert = build_reviewer_messages(state)
     
@@ -175,8 +177,8 @@ async def expert_reviewer_node(state: MDTGraphState, config: RunnableConfig) -> 
 **重要提醒**：最后仍需按照原有格式输出完整的诊断报告。""")
                 state["expert_pool"][group_id]["messages"].append(reinvestigate_message)
 
-    # 4. 整合结果后更新MDTGraphState中round_count、consensus_reached
-    state["round_count"] += 1
+    # 4. 整合结果后更新MDTGraphState中consensus_reached
+    # (round_count已在函数开始时递增)
     
     # 检查是否所有专家都满意（排除有错误的专家）
     # Note: need to re-check the full expert pool state
@@ -195,7 +197,7 @@ async def expert_reviewer_node(state: MDTGraphState, config: RunnableConfig) -> 
     satisfied_count = sum(1 for e in active_experts if e.get("is_satisfied", False))
     total_count = len(active_experts)
 
-    progress_msg = f"[PASS] 第 {state['round_count'] - 1} 轮专家互审完成 (满意度: {satisfied_count}/{total_count})"
+    progress_msg = f"[PASS] 第 {state['round_count']} 轮专家互审完成 (满意度: {satisfied_count}/{total_count})"
     if all_satisfied:
         progress_msg += " - 已达成共识！"
     elif state["round_count"] > state.get("max_rounds", 3):

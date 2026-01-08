@@ -95,7 +95,7 @@ cython_debug/
 *.swp
 *.swo
 *~
-
+.agent
 # macOS
 .DS_Store
 .AppleDouble
