@@ -65,19 +65,25 @@ def build_reviewer_messages(state: MDTGraphState):
                 "is_satisfied": True
             }}
             """
-
+        
         patient_report = state.get("patient_portrait", "")
-        # 在1的位置插入患者病例信息
-        # Check if we haven't already inserted it (simple check to avoid dupes if node re-runs oddly, though standard langgraph flow is fine)
-        # For simplicity, assuming messages are fresh or we append. But here we insert at 1.
-        # Be careful not to mutate global state objects repeatedly if they persist inappropriately, but here we modify the dict which is passed by ref.
-        # Ideally we should clone messages, but for 'need_update_expert' which is used for the *next* step, modifying it is the intention.
         
-        # 插入患者信息
-        need_update_expert[group_id]["messages"].insert(1, HumanMessage(content=f"诊断的信息如下:\n\n{patient_report}"))
+        # 【修复】深拷贝 messages，避免每轮审核都重复插入相同的患者信息和审核指令
+        # 这样可以防止消息膨胀问题
+        from copy import deepcopy
+        need_update_expert[group_id]["messages"] = deepcopy(expert["messages"])
         
-        # 追加审核指令
-        need_update_expert[group_id]["messages"].append(HumanMessage(content=f"你已经完成了审核，现在给你提供其他专家的报告，一共有{len(other_reports)}份报告，分别如下:\n\n{other_reports}"))
+        # 【修复】使用 append 替代 insert(1, ...)，避免列表索引越界风险
+        # 同时确保患者信息只在当前审核轮次中添加一次
+        need_update_expert[group_id]["messages"].append(
+            HumanMessage(content=f"诊断的信息如下:\n\n{patient_report}")
+        )
+        
+        # 追加审核指令（统计其他报告数量时应该用字典的长度而不是字符串长度）
+        other_reports_count = len([gid for gid in export_pool.keys() if gid != group_id])
+        need_update_expert[group_id]["messages"].append(
+            HumanMessage(content=f"你已经完成了审核，现在给你提供其他专家的报告，一共有{other_reports_count}份报告，分别如下:\n\n{other_reports}")
+        )
         need_update_expert[group_id]["messages"].append(HumanMessage(content=reviewer_prompt))
 
     return state, need_update_expert    

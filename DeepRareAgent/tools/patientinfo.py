@@ -19,13 +19,36 @@ from langgraph.types import Command
 import shortuuid
 
 def generate_short_uuid(existing_ids: set) -> str:
-    # 初始化一个针对该字母表的生成器
+    """
+    生成短 UUID，避免与现有 ID 冲突。
+    
+    使用 4 字符长度（32^4 = 1,048,576 种可能），大幅降低碰撞风险。
+    添加最大重试次数保护，防止在极端情况下的无限循环。
+    
+    Args:
+        existing_ids: 已存在的 ID 集合
+        
+    Returns:
+        str: 新生成的唯一 ID
+        
+    Raises:
+        RuntimeError: 如果在最大重试次数内无法生成唯一 ID
+    """
+    # 初始化一个针对该字母表的生成器（排除易混淆字符 0, 1, I, O）
     run = shortuuid.ShortUUID(alphabet="23456789ABCDEFGHJKLMNPQRSTUVWXYZ")
-    while True:
-        # 生成 2 位
-        new_id = run.random(length=2)
+    max_retries = 1000  # 防止无限循环
+    
+    for attempt in range(max_retries):
+        # 生成 4 位 ID（32^4 = 1,048,576 种可能，碰撞概率极低）
+        new_id = run.random(length=4)
         if new_id not in existing_ids:
             return new_id
+    
+    # 如果达到最大重试次数仍未找到唯一 ID，抛出异常
+    raise RuntimeError(
+        f"无法在 {max_retries} 次尝试内生成唯一 ID。"
+        f"现有 ID 数量: {len(existing_ids)}"
+    )
         
         
 
@@ -121,6 +144,7 @@ def upsert_patient_facts(
             "exams": [],
             "medications": [],
             "family_history": [],
+            "past_medical_history": [],
             "others": []
         }
 
@@ -132,7 +156,7 @@ def upsert_patient_facts(
         new_state["patient_info"]["base_info"] = {}
 
     # 确保其他字段也存在
-    for field in ["symptoms", "vitals", "exams", "medications", "family_history", "others"]:
+    for field in ["symptoms", "vitals", "exams", "medications", "family_history", "past_medical_history", "others"]:
         if field not in new_state["patient_info"]:
             new_state["patient_info"][field] = []
 
@@ -213,6 +237,7 @@ def delete_patient_facts(
             "exams": [],
             "medications": [],
             "family_history": [],
+            "past_medical_history": [],
             "others": []
         }
 
@@ -224,7 +249,7 @@ def delete_patient_facts(
         new_state["patient_info"]["base_info"] = {}
 
     # 确保其他字段也存在
-    for field in ["symptoms", "vitals", "exams", "medications", "family_history", "others"]:
+    for field in ["symptoms", "vitals", "exams", "medications", "family_history", "past_medical_history", "others"]:
         if field not in new_state["patient_info"]:
             new_state["patient_info"][field] = []
 

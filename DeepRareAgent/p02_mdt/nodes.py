@@ -67,8 +67,8 @@ async def triage_to_mdt_node(state: Dict[str, Any],config: RunnableConfig) -> MD
         "expert_pool": expert_pool,
         "blackboard": {
             "published_reports": {},
-            "conflicts": [],
-            "common_understandings": []
+            "conflicts": {},
+            "common_understandings": {}
         },
         "round_count": 0,
         "max_rounds": max_rounds,  # 使用配置文件中的值
