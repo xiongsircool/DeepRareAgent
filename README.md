@@ -17,43 +17,14 @@
 ![系统架构](images/multi_team_mdt_arch.png)
 
 
-> ⚠️ **运行注意事项**: 通常项目无法正常运行是由于所选模型能力不足导致的。例如：若预诊断模型（Pre-Diagnosis Agent）不支持图像识别（Vision），将会导致多模态图像输入功能报错。请务必在 `config.yml` 中为相关 Agent 配置支持对应能力（如 GPT-4o, Claude-3.5-Sonnet, Qwen-VL 等）的模型。
+> **运行注意事项**: 通常项目无法正常运行是由于所选模型能力不足导致的。预诊断模型（Pre-Diagnosis Agent）不支持图像识别（Vision），将会导致多模态图像输入功能报错。请务必在 `config.yml` 中为相关 Agent 配置支持对应能力（如 GPT-4o, Claude-3.5-Sonnet, Qwen-VL 等）的模型。
 ---
 
 ## 系统图谱架构 (System Graph Schema)
 
 本系统基于 **LangGraph** 构建，采用状态机（State Graph）模式管理诊断流程。整体流转逻辑如下：
 
-```mermaid
-graph TD
-    %% 节点定义
-    START((Start))
-    prediagnosis[Pre-Diagnosis Agent<br/>(智能问诊)]
-    check_status{Start Diagnosis?}
-    prepare_mdt[Prepare MDT<br/>(生成病情摘要)]
-    mdt_diagnosis[[MDT Subgraph<br/>(多专家会诊子图)]]
-    summary[Summary Agent<br/>(生成综合报告)]
-    END((End))
-
-    %% 流程连接
-    START --> prediagnosis
-    prediagnosis --> check_status
-    
-    %% 条件路由
-    check_status -- No --> END
-    check_status -- Yes --> prepare_mdt
-    
-    %% 深度诊断流程
-    prepare_mdt --> mdt_diagnosis
-    mdt_diagnosis --> summary
-    summary --> END
-
-    %% 样式
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px;
-    classDef cluster fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef decision fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
-    class check_status decision;
-```
+![DeepRareAgent System Graph](images/MDT_Graph.png)
 
 **流程详解**：
 1.  **START -> Pre-Diagnosis**: 系统启动，进入预诊断节点，与患者进行交互式问诊（收集基本信息、症状、病史等）。
@@ -70,7 +41,11 @@ graph TD
 
 ### 1. 多智能体团队并行 (Multi-Team Parallelism)
 
-系统可配置 **N 个独立的诊断组 (Group)**，如 `group_1`, `group_2`。每个 Group 是一个功能完整的 AI 团队：
+系统可配置 **N 个独立的诊断组 (Group)**。每一个 Group（如 `group_1`, `group_2`）并不是单一的模型，而是一个**完整的多学科会诊团队 (MDT Unit)**，内部包含负责不同职能的多个 Agent。
+
+> 💡 **现状说明**: 目前基于研究进度，系统仅预设了两个标准化的诊断组作为 Baseline。后续将针对特定罕见病领域（如神经遗传病、代谢病等）进行进一步开发，引入经过领域微调的专科诊断组。
+
+每个 Group 的典型结构如下：
 
 | 角色 | 说明 |
 |---|---|
@@ -211,7 +186,8 @@ DeepRareAgent 的设计与验证参考了以下 2024-2025 年的顶刊与前沿�
 ---
 ## 后续任务
 - [ ] 支持定制总结报告(已经实现后端支持，前端还需要优化)
-- [ ] 知识图谱子智能体(初始化实现方案neo4jmcp+deepagents)
+- [ ] 采用一个方案将本研究目前的工具拆分成若干个智能体(实现真正的MDT)
+- [ ] 知识图谱子智能体(初始化实现方案neo4jmcp+deepagents或者借鉴文献实现该功能)
 - [ ] 私有病例数据集支持智能体 (考虑是FHIR还是直接采用sql数据库简单实现)
 - [ ] 患者信息升级多模态数据集管理
 - [ ] 个人变异文件支持智能体 

@@ -58,7 +58,7 @@ def trigger_deep_diagnosis(
     # 然后由节点返回值统一更新到主图
     return Command(
         update={
-            "messages": [ToolMessage(content="已触发深度诊断模式", tool_call_id=tool_call_id)],
+            "messages": [ToolMessage(content="已触发深度诊断模式,简单回复用户已经开启深度诊断就可以了", tool_call_id=tool_call_id)],
             "start_diagnosis": True
         }
     )

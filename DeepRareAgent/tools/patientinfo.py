@@ -163,8 +163,13 @@ def upsert_patient_facts(
     patient_info = new_state["patient_info"]
 
     for bucket, records in payload.items():
+        # 【修改】自动创建不存在的 bucket，而不是抛出错误
         if bucket not in patient_info:
-            raise ValueError(f"Unknown bucket: {bucket}")
+            # 如果是 base_info，初始化为 dict；其他字段初始化为 list
+            if bucket == "base_info":
+                patient_info[bucket] = {}
+            else:
+                patient_info[bucket] = []
 
         existing_list = patient_info[bucket]
 
@@ -256,8 +261,13 @@ def delete_patient_facts(
     patient_info = new_state["patient_info"]
 
     for bucket, id_list in payload.items():
+        # 【修改】自动创建不存在的 bucket，而不是抛出错误
         if bucket not in patient_info:
-            raise ValueError(f"Unknown bucket: {bucket}")
+            # 如果是 base_info，初始化为 dict；其他字段初始化为 list
+            if bucket == "base_info":
+                patient_info[bucket] = {}
+            else:
+                patient_info[bucket] = []
 
         patient_info[bucket] = [
             r for r in patient_info[bucket]
@@ -410,8 +420,13 @@ def test_upsert_patient_facts(state: Dict[str, Any], payload: Dict[str, List[Dic
     patient_info = new_state["patient_info"]
 
     for bucket, records in payload.items():
+        # 【修改】自动创建不存在的 bucket，而不是抛出错误
         if bucket not in patient_info:
-            raise ValueError(f"Unknown bucket: {bucket}")
+            # 如果是 base_info，初始化为 dict；其他字段初始化为 list
+            if bucket == "base_info":
+                patient_info[bucket] = {}
+            else:
+                patient_info[bucket] = []
 
         existing_list = patient_info[bucket]
         existing_ids = {r["id"] for r in existing_list if "id" in r}
@@ -451,8 +466,13 @@ def test_delete_patient_facts(state: Dict[str, Any], payload: Dict[str, List[str
     patient_info = new_state["patient_info"]
 
     for bucket, id_list in payload.items():
+        # 【修改】自动创建不存在的 bucket，而不是抛出错误
         if bucket not in patient_info:
-            raise ValueError(f"Unknown bucket: {bucket}")
+            # 如果是 base_info，初始化为 dict；其他字段初始化为 list
+            if bucket == "base_info":
+                patient_info[bucket] = {}
+            else:
+                patient_info[bucket] = []
 
         patient_info[bucket] = [
             r for r in patient_info[bucket]
