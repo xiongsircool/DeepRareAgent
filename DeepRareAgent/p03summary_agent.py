@@ -8,6 +8,7 @@
 import re
 from typing import Any, Dict
 from pathlib import Path
+from datetime import datetime
 
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
@@ -204,6 +205,9 @@ def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any
     patient_portrait = state.get("patient_portrait", "")
     summary_style = state.get("summary_style", "")
     
+    # 获取当前时间
+    current_time = datetime.now().strftime("%Y-%m-%d")
+
     # 如果有自定义格式要求，使用自定义；否则使用默认
     if summary_style:
         # 用户自定义报告格式
@@ -211,11 +215,15 @@ def summary_node(state: MainGraphState, config: RunnableConfig) -> Dict[str, Any
 请按照以下格式要求生成报告：
 
 {summary_style}
+
+报告生成日期：{current_time}
 """
     else:
         # 默认格式要求
-        format_instruction = """
+        format_instruction = f"""
 请严格按照系统提示词的标准格式，直接生成一份临床诊断报告。
+
+报告生成日期：{current_time}
 
 要求：
 - 明确给出诊断结论，不要描述专家讨论过程
