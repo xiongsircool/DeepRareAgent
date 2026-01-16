@@ -19,6 +19,10 @@ from DeepRareAgent.p02_mdt.graph import create_mdt_graph
 from DeepRareAgent.p03summary_agent import summary_node
 from DeepRareAgent.schema import MainGraphState
 
+from langfuse.langchain import CallbackHandler
+langfuse_handler = CallbackHandler()
+
+
 # --- 3. 状态初始化辅助函数 ---
 def init_patient_info() -> Dict[str, Any]:
     """
@@ -179,7 +183,7 @@ def create_main_graph():
     # 汇总报告 → END
     workflow.add_edge("summary", END)
 
-    return workflow.compile(name="RareDiagnosisSystem")
+    return workflow.compile(name="RareDiagnosisSystem").with_config({"callbacks": [langfuse_handler]})
 
 
 # 编译主图
